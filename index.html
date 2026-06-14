@@ -1326,6 +1326,405 @@
                 padding-left: 0;
             }
         }
+
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+                gap: 0.5rem;
+                padding: 0.75rem 0.5rem;
+            }
+            .header-title-container {
+                flex-direction: column;
+                gap: 0.35rem;
+            }
+            .logo-placeholder {
+                width: 36px;
+                height: 36px;
+                font-size: 0.9rem;
+            }
+            .header-title h1 {
+                font-size: 1.05rem;
+                text-align: center;
+            }
+            .header-title p {
+                text-align: center;
+                font-size: 0.7rem;
+            }
+            .tab-switcher {
+                width: 100%;
+                justify-content: center;
+                gap: 0.25rem;
+                padding: 0.25rem;
+            }
+            .tab-btn {
+                padding: 0.35rem 0.75rem;
+                font-size: 0.75rem;
+                flex: 1;
+                text-align: center;
+                border-radius: 15px;
+            }
+            .container {
+                padding: 0.5rem;
+            }
+            .stats-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 0.5rem;
+                margin-bottom: 1rem;
+            }
+            .stat-card {
+                padding: 0.75rem;
+                border-radius: 12px;
+            }
+            .stat-card h3 {
+                font-size: 0.75rem;
+                margin-bottom: 0.25rem;
+            }
+            .stat-value {
+                font-size: 1.2rem;
+            }
+            .stat-subtitle {
+                font-size: 0.65rem;
+                margin-top: 0.15rem;
+            }
+            .search-panel-container {
+                padding: 0.75rem;
+                margin-bottom: 1rem;
+                gap: 0.75rem;
+                border-radius: 12px;
+            }
+            .search-panel-header {
+                gap: 0.5rem;
+                padding-bottom: 0.5rem;
+            }
+            .search-panel-header h2 {
+                font-size: 0.95rem;
+            }
+            .search-panel-body {
+                gap: 0.75rem;
+            }
+            .main-search-row {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+            .search-input-premium {
+                font-size: 0.85rem;
+                padding: 0.65rem 0.75rem;
+                border-radius: 8px;
+            }
+            .search-action-btn {
+                width: 100%;
+                padding: 0.65rem 1rem;
+                font-size: 0.85rem;
+                border-radius: 8px;
+            }
+            .filters-row-premium {
+                grid-template-columns: 1fr;
+                gap: 0.5rem;
+            }
+            .filter-group {
+                gap: 0.25rem;
+            }
+            .filter-group label {
+                font-size: 0.75rem;
+            }
+            .filter-select-premium {
+                padding: 0.65rem 0.75rem;
+                font-size: 0.85rem;
+                border-radius: 8px;
+            }
+            .view-toggle-container-premium {
+                border-radius: 8px;
+            }
+            .toggle-view-btn-premium {
+                padding: 0.4rem;
+                font-size: 0.8rem;
+            }
+            .search-stats-premium {
+                font-size: 0.75rem;
+                padding-top: 0.5rem;
+            }
+            .meetings-grid {
+                grid-template-columns: 1fr;
+                gap: 0.75rem;
+            }
+            .meeting-card {
+                padding: 1rem;
+                min-height: 140px;
+                border-radius: 12px;
+            }
+            .meeting-card h2 {
+                font-size: 1.05rem;
+                margin-bottom: 0.5rem;
+            }
+            .meeting-num-badge {
+                padding: 0.15rem 0.5rem;
+                font-size: 0.7rem;
+                margin-bottom: 0.5rem;
+            }
+            .meeting-card .date {
+                font-size: 0.75rem;
+                margin-bottom: 0.5rem;
+            }
+            .meeting-info-row {
+                padding-top: 0.5rem;
+                font-size: 0.75rem;
+            }
+            .toc-sidebar {
+                max-height: none;
+                padding: 0.5rem;
+                border-radius: 12px;
+            }
+            .toc-sidebar h3 {
+                font-size: 0.85rem;
+                padding-bottom: 0.35rem;
+            }
+            .toc-links {
+                flex-direction: row;
+                overflow-x: auto;
+                white-space: nowrap;
+                padding-bottom: 0.35rem;
+                gap: 0.35rem;
+                -webkit-overflow-scrolling: touch;
+            }
+            .toc-link {
+                display: inline-flex;
+                flex-shrink: 0;
+                padding: 0.35rem 0.65rem;
+                font-size: 0.75rem;
+                border-radius: 6px;
+            }
+            .toc-link-badge {
+                font-size: 0.65rem;
+                padding: 0.05rem 0.25rem;
+            }
+            .meeting-section-header {
+                margin-top: 1rem;
+                margin-bottom: 0.75rem;
+                padding-bottom: 0.35rem;
+            }
+            .meeting-section-header h2 {
+                font-size: 1.15rem;
+                gap: 0.5rem;
+            }
+            .meeting-section-header h2::before {
+                height: 1rem;
+                width: 3px;
+            }
+            .meeting-section-date {
+                font-size: 0.75rem;
+            }
+            .agenda-list-card {
+                border-radius: 12px;
+                margin-bottom: 0.75rem;
+            }
+            .agenda-list-card-header {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 0.5rem;
+                padding: 0.75rem;
+            }
+            .header-main-info {
+                flex-wrap: wrap;
+                gap: 0.35rem;
+                width: 100%;
+            }
+            .agenda-no-badge {
+                font-size: 0.65rem;
+                padding: 0.15rem 0.4rem;
+                border-radius: 4px;
+            }
+            .meta-badge {
+                font-size: 0.65rem;
+                padding: 0.15rem 0.4rem;
+                border-radius: 8px;
+            }
+            .header-subject-preview {
+                flex-basis: 100%;
+                margin-left: 0;
+                margin-top: 0.25rem;
+                font-size: 0.85rem;
+                line-height: 1.4;
+                display: -webkit-box;
+                -webkit-line-clamp: 3;
+                -webkit-box-orient: vertical;
+                overflow: hidden;
+            }
+            .header-right-info {
+                width: 100%;
+                justify-content: space-between;
+                align-items: center;
+                margin-top: 0.35rem;
+                border-top: 1px solid rgba(255, 255, 255, 0.05);
+                padding-top: 0.35rem;
+                gap: 0.5rem;
+            }
+            .header-fine-badge {
+                font-size: 0.75rem;
+                padding: 0.15rem 0.4rem;
+            }
+            .toggle-arrow {
+                margin-top: 0;
+                font-size: 0.75rem;
+            }
+            .agenda-list-card-body {
+                padding: 0 0.75rem;
+                gap: 0.75rem;
+            }
+            .agenda-list-card.expanded .agenda-list-card-body {
+                padding: 0.75rem;
+            }
+            .part-title {
+                font-size: 0.75rem;
+                padding-left: 0.35rem;
+                border-left-width: 2px;
+                margin-bottom: 0.15rem;
+            }
+            .part-content {
+                font-size: 0.85rem;
+                line-height: 1.5;
+            }
+            .part-content.subject-text {
+                font-size: 0.95rem;
+            }
+            .part-content.decision-box {
+                padding: 0.75rem;
+                border-left-width: 4px;
+                border-radius: 8px;
+                margin-top: 0.15rem;
+            }
+            .decision-text {
+                font-size: 0.85rem;
+                line-height: 1.5;
+            }
+            .table-responsive {
+                margin-top: 0.5rem;
+                border-radius: 6px;
+            }
+            table {
+                font-size: 0.75rem;
+            }
+            th, td {
+                padding: 0.5rem 0.65rem;
+            }
+            .viewer-layout {
+                padding: 0.75rem;
+                gap: 1rem;
+                border-radius: 12px;
+            }
+            .agenda-sidebar {
+                max-height: none;
+                padding-bottom: 0.75rem;
+            }
+            .sidebar-meeting-info h2 {
+                font-size: 1.1rem;
+            }
+            .sidebar-meeting-info p {
+                font-size: 0.75rem;
+            }
+            .agenda-item {
+                padding: 0.75rem;
+                border-radius: 8px;
+            }
+            .agenda-badge {
+                font-size: 0.65rem;
+                padding: 0.1% 0.35rem;
+            }
+            .agenda-item-title {
+                font-size: 0.75rem;
+            }
+            .detail-viewer {
+                max-height: none;
+                overflow-y: visible;
+                gap: 1rem;
+            }
+            .block-subject {
+                padding: 0.85rem;
+                border-radius: 12px;
+            }
+            .block-subject h2 {
+                font-size: 1.05rem;
+            }
+            .block-decision {
+                padding: 1rem;
+                border-radius: 12px;
+                border-left-width: 4px;
+            }
+            .block-decision h3 {
+                font-size: 0.95rem;
+                margin-bottom: 0.5rem;
+            }
+            .decision-text {
+                font-size: 0.85rem;
+            }
+            .inspector-row {
+                flex-direction: column;
+                gap: 0.35rem;
+                padding-top: 0.5rem;
+                font-size: 0.75rem;
+            }
+            details {
+                border-radius: 8px;
+            }
+            summary {
+                padding: 0.85rem;
+                font-size: 0.85rem;
+            }
+            .accordion-content {
+                padding: 0.85rem;
+                font-size: 0.85rem;
+            }
+            .directive-card {
+                padding: 1rem;
+                border-radius: 12px;
+                margin-bottom: 1rem;
+            }
+            .directive-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.35rem;
+                padding-bottom: 0.75rem;
+                margin-bottom: 0.75rem;
+            }
+            .directive-header h2 {
+                font-size: 1.05rem;
+            }
+            .directive-header span {
+                font-size: 0.75rem;
+            }
+            .directive-topic {
+                padding: 0.85rem;
+                border-radius: 8px;
+                margin-bottom: 1rem;
+            }
+            .directive-topic h3 {
+                font-size: 0.95rem;
+            }
+            .directive-topic p {
+                font-size: 0.85rem;
+                margin-bottom: 0.5rem;
+            }
+            .directive-decision {
+                padding: 0.5rem 0.75rem;
+                font-size: 0.8rem;
+            }
+            .directive-instruction-item {
+                padding: 0.75rem;
+                gap: 0.75rem;
+            }
+            .directive-instruction-num {
+                width: 24px;
+                height: 24px;
+                font-size: 0.75rem;
+            }
+            .directive-instruction-content h4 {
+                font-size: 0.9rem;
+            }
+            .directive-instruction-content p {
+                font-size: 0.8rem;
+            }
+        }
     </style>
 </head>
 <body>
