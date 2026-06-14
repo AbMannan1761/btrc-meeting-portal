@@ -1,0 +1,23 @@
+# Ignore large binary files
+*.pdf
+*.docx
+*.doc
+*.xlsx
+*.exe
+*.zip
+*.tar
+*.png
+*.txt
+
+# Ignore specific draft folders and presentations
+Meeting presectation for CM SM/
+Commission meeting/
+
+# Ignore system/app data directories
+.system_generated/
+logs/
+brain/
+scratch/
+all_tmp_*
+cmr306_pages/
+*.tmp
