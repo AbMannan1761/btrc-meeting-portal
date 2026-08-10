@@ -7,15 +7,15 @@ import xml.etree.ElementTree as ET
 import zipfile
 
 # Input file paths
-excel_overall_path = r"c:\Users\mannan\OneDrive - Bangladesh Telecommunication Regulatory Commission\1. E & I\Meeting\Summery_Over all.xlsx"
-excel_sharmin_path = r"c:\Users\mannan\OneDrive - Bangladesh Telecommunication Regulatory Commission\1. E & I\Meeting\CD-PS-15042026V1 from sharmin mam.xlsx"
-word_300_path = r"C:\Users\mannan\.gemini\antigravity\brain\d4fb72b8-9e63-42ba-8680-37ffcb1867fa\scratch\doc_converted.docx"
-word_302_path = r"c:\Users\mannan\OneDrive - Bangladesh Telecommunication Regulatory Commission\1. E & I\Meeting\Agenda_302.docx"
-word_307_path = r"c:\Users\mannan\OneDrive - Bangladesh Telecommunication Regulatory Commission\1. E & I\Meeting\307\list of 307 draft.docx"
-mom_path = r"C:\Users\mannan\.gemini\antigravity\brain\d4fb72b8-9e63-42ba-8680-37ffcb1867fa\scratch\mom_cm_sm.docx"
-instruction_path = r"C:\Users\mannan\.gemini\antigravity\brain\d4fb72b8-9e63-42ba-8680-37ffcb1867fa\scratch\cm_sm_instruction.docx"
+excel_overall_path = r"e:\user\OneDrive - Bangladesh Telecommunication Regulatory Commission\1. E & I\Meeting\Summery_Over all.xlsx"
+excel_sharmin_path = r"e:\user\OneDrive - Bangladesh Telecommunication Regulatory Commission\1. E & I\Meeting\CD-PS-15042026V1 from sharmin mam.xlsx"
+word_300_path = r"e:\user\OneDrive - Bangladesh Telecommunication Regulatory Commission\1. E & I\Meeting\doc_converted.docx"
+word_302_path = r"e:\user\OneDrive - Bangladesh Telecommunication Regulatory Commission\1. E & I\Meeting\Agenda_302.docx"
+word_307_path = r"e:\user\OneDrive - Bangladesh Telecommunication Regulatory Commission\1. E & I\Meeting\307\list of 307 draft.docx"
+mom_path = r"e:\user\OneDrive - Bangladesh Telecommunication Regulatory Commission\1. E & I\Meeting\mom_cm_sm.docx"
+instruction_path = r"e:\user\OneDrive - Bangladesh Telecommunication Regulatory Commission\1. E & I\Meeting\cm_sm_instruction.docx"
 
-output_json_path = r"C:\Users\mannan\.gemini\antigravity\brain\d4fb72b8-9e63-42ba-8680-37ffcb1867fa\scratch\meetings_db.json"
+output_json_path = r"e:\user\OneDrive - Bangladesh Telecommunication Regulatory Commission\1. E & I\Meeting\meetings_db.json"
 
 # Date formatter helper
 def format_meeting_date(cm_no, raw_date):
@@ -2096,6 +2096,154 @@ coordination_mom = [
         ]
     }
 ]
+
+# 3.2.7 Meeting 308
+print("Injecting detailed 308th meeting data...")
+meetings["308তম"] = {
+    "meeting_number": "৩০৮তম",
+    "meeting_date": "২৯ জুন, ২০২৬",
+    "agendas": [
+        {
+            "agenda_no": "০১",
+            "subject": "Udayan Online Limited নামক Thana-ISP লাইসেন্সধারী প্রতিষ্ঠান কর্তৃক কমিশনের নির্দেশনাসহ গাইডলাইন ও লাইসেন্স এর শর্ত ভঙ্গ করায় প্রয়োজনীয় আইনানুগ ব্যবস্থা গ্রহণ প্রসঙ্গে।",
+            "decision": "Udayan Online Limited এর বিরুদ্ধে বাংলাদেশ টেলিযোগাযোগ নিয়ন্ত্রণ আইন, ২০০১ এর বিধান মোতাবেক প্রশাসনিক জরিমানা/ প্রয়োজনীয় আইনানুগ ব্যবস্থা গ্রহণ করা যেতে পারে।",
+            "fine_amount": "",
+            "details": {
+                "presentation_summary": "Thana-ISP লাইসেন্সপ্রাপ্ত Udayan Online Limited নামক প্রতিষ্ঠান কর্তৃক কমিশনের জারীকৃত অপারেশনাল নির্দেশনাসহ সংশ্লিষ্ট গাইডলাইন ও লাইসেন্স এর শর্ত ভঙ্গ করায় প্রয়োজনীয় আইনানুগ ব্যবস্থা গ্রহণ প্রসঙ্গে।",
+                "tables": [],
+                "implementation": "ইএন্ডআই ডিরেক্টরেট ও অর্থ, হিসাব ও রাজস্ব বিভাগ।",
+                "assigned_inspector": "",
+                "case_status": "নিষ্পন্ন"
+            }
+        },
+        {
+            "agenda_no": "০২",
+            "subject": "Earth Telecommunication (Pvt.) Limited এবং Nationwide-ISP লাইসেন্সধারী Aamra Networks Limited, Race Online Limited ও Optimax Communication Limited কর্তৃক কমিশনের জারিকৃত অপারেশনাল নির্দেশনাসহ সংশ্লিষ্ট গাইডলাইন ও লাইসেন্স এর শর্ত ভঙ্গ করায় প্রয়োজনীয় আইনানুগ ব্যবস্থা গ্রহণ প্রসঙ্গে।",
+            "decision": "Earth Telecommunication, Aamra Networks, Race Online ও Optimax Communication প্রতিষ্ঠানসমূহের বিরুদ্ধে বাংলাদেশ টেলিযোগাযোগ নিয়ন্ত্রণ আইন, ২০০১ (সংশোধিত ২০১০) এর বিধান মোতাবেক প্রয়োজনীয় আইনানুগ ব্যবস্থা গ্রহণ করা যেতে পারে।",
+            "fine_amount": "",
+            "details": {
+                "presentation_summary": "IIG লাইসেন্সধারী প্রতিষ্ঠান Earth Telecommunication (Pvt.) Limited এবং Nationwide-ISP লাইসেন্সধারী Aamra Networks Limited, Race Online Limited ও Optimax Communication Limited প্রতিষ্ঠানসমূহের বিভিন্ন ব্যত্যয় পরিলক্ষিত হয়।",
+                "tables": [],
+                "implementation": "ইএন্ডআই ডিরেক্টরেট ও অর্থ, হিসাব ও রাজস্ব বিভাগ।",
+                "assigned_inspector": "",
+                "case_status": "নিষ্পন্ন"
+            }
+        },
+        {
+            "agenda_no": "০৩",
+            "subject": "Always On Network Bangladesh Limited নামক প্রতিষ্ঠান কর্তৃক কমিশনের জারীকৃত অপারেশনাল নির্দেশনাসহ সংশ্লিষ্ট গাইডলাইন ও লাইসেন্স এর শর্ত ভঙ্গ করায় প্রয়োজনীয় আইনানুগ ব্যবস্থা গ্রহণ প্রসঙ্গে।",
+            "decision": "কমিশনের নির্দেশনা তথা সংশ্লিষ্ট লাইসেন্স ও গাইডলাইনের শর্ত ভঙ্গ করায় Always On Network Bangladesh Ltd. এর বিরুদ্ধে প্রয়োজনীয় আইনানুগ ব্যবস্থা গ্রহণ করা যেতে পারে।",
+            "fine_amount": "",
+            "details": {
+                "presentation_summary": "Nationwide-ISP লাইসেন্সপ্রাপ্ত Always On Network Bangladesh Limited নামক প্রতিষ্ঠান কর্তৃক কমিশনের জারীকৃত অপারেশনাল নির্দেশনাসহ সংশ্লিষ্ট গাইডলাইন ও লাইসেন্স এর শর্ত ভঙ্গ করায় প্রয়োজনীয় আইনানুগ ব্যবস্থা গ্রহণ প্রসঙ্গে।",
+                "tables": [],
+                "implementation": "ইএন্ডআই ডিরেক্টরেট এবং অর্থ, হিসাব ও রাজস্ব বিভাগ।",
+                "assigned_inspector": "",
+                "case_status": "নিষ্পন্ন"
+            }
+        },
+        {
+            "agenda_no": "০৪",
+            "subject": "System Solution & Development Limited নামক প্রতিষ্ঠান কর্তৃক কমিশনের জারীকৃত অপারেশনাল নির্দেশনাসহ সংশ্লিষ্ট গাইডলাইন ও লাইসেন্স এর শর্ত ভঙ্গ করায় প্রয়োজনীয় আইনানুগ ব্যবস্থা গ্রহণ প্রসঙ্গে।",
+            "decision": "প্রতিষ্ঠান কর্তৃক সংশ্লিষ্ট গাইডলাইন ও লাইসেন্সের শর্ত এবং কমিশনের নির্দেশনা ভঙ্গ করায় প্রতিষ্ঠানটির বিষয়ে সদয় সিদ্ধান্ত।",
+            "fine_amount": "",
+            "details": {
+                "presentation_summary": "Nationwide-ISP লাইসেন্সপ্রাপ্ত System Solution & Development Limited নামক প্রতিষ্ঠান কর্তৃক কমিশনের জারীকৃত অপারেশনাল নির্দেশনাসহ সংশ্লিষ্ট গাইডলাইন ও লাইসেন্স এর শর্ত ভঙ্গ।",
+                "tables": [],
+                "implementation": "ইএন্ডআই ডিরেক্টরেট।",
+                "assigned_inspector": "",
+                "case_status": "নিষ্পন্ন"
+            }
+        },
+        {
+            "agenda_no": "০৫",
+            "subject": "Skyview Online Ltd-Nationwide-ISP ও Greenmax Technologies Ltd নামক প্রতিষ্ঠানসমূহ কর্তৃক কমিশনের জারীকৃত অপারেশনাল নির্দেশনাসহ সংশ্লিষ্ট গাইডলাইন ও লাইসেন্স এর শর্ত ভঙ্গ করায় প্রয়োজনীয় আইনানুগ ব্যবস্থা গ্রহণ প্রসঙ্গে।",
+            "decision": "প্রতিষ্ঠানসমূহ কর্তৃক সংশ্লিষ্ট গাইডলাইন ও লাইসেন্সের শর্ত এবং কমিশনের নির্দেশনাসমূহ ভঙ্গ করায় প্রতিষ্ঠানসমূহের বিষয়ে সদয় সিদ্ধান্ত।",
+            "fine_amount": "",
+            "details": {
+                "presentation_summary": "Skyview Online Ltd-Nationwide-ISP ও Greenmax Technologies Ltd নামক প্রতিষ্ঠানসমূহ কর্তৃক কমিশনের জারীকৃত অপারেশনাল নির্দেশনাসহ সংশ্লিষ্ট গাইডলাইন ও লাইসেন্স এর শর্ত ভঙ্গ।",
+                "tables": [],
+                "implementation": "ইএন্ডআই ডিরেক্টরেট।",
+                "assigned_inspector": "",
+                "case_status": "নিষ্পন্ন"
+            }
+        },
+        {
+            "agenda_no": "০৬",
+            "subject": "ADN Telecom Limited নামক প্রতিষ্ঠান কর্তৃক কমিশনের জারীকৃত অপারেশনাল নির্দেশনাসহ সংশ্লিষ্ট গাইডলাইন ও লাইসেন্স এর শর্ত ভঙ্গ করায় প্রয়োজনীয় আইনানুগ ব্যবস্থা গ্রহণ প্রসঙ্গে।",
+            "decision": "ADN Telecom Limited-এর অনুমতি ব্যতিরেকে শেয়ার কাঠামো পরিবর্তনের বিষয়ে প্রশাসনিক জরিমানা আরোপ করাসহ হস্তান্তরিত শেয়ার এর বিক্রিত মূল্যের উপর ৫.৫% হারে ফি কমিশনে জমা দেয়ার আদেশ প্রদান।",
+            "fine_amount": "",
+            "details": {
+                "presentation_summary": "ADN Telecom Limited-এর মহাখালীস্থ অফিস ও স্থাপনা সরেজমিনে পরিদর্শন করা হয়। পরিদর্শনকালে প্রতিষ্ঠানটির কার্যক্রমে আইএসপি গাইডলাইন, লাইসেন্সের শর্ত এবং কমিশনের সময় সময় জারীকৃত নির্দেশনার একাধিক ব্যত্যয় পরিলক্ষিত হয়।",
+                "tables": [],
+                "implementation": "ইএন্ডআই ডিরেক্টরেট।",
+                "assigned_inspector": "",
+                "case_status": "নিষ্পন্ন"
+            }
+        }
+    ]
+}
+
+# 3.2.8 Meeting 309 
+print("Injecting detailed 309th meeting data...")
+meetings["309তম"] = {
+    "meeting_number": "৩০৯তম",
+    "meeting_date": "২৭ জুলাই, ২০২৬",
+    "agendas": [
+        {
+            "agenda_no": "০১",
+            "subject": "M.S Adiba Online নামক Thana/Upazila আইএসপি লাইসেন্সধারী প্রতিষ্ঠানের বিরুদ্ধে আনীত অভিযোগ ও অপারেশনাল কার্যক্রমের তদন্ত প্রতিবেদন প্রসঙ্গে।",
+            "decision": "তদন্ত প্রতিবেদনের ভিত্তিতে প্রয়োজনীয় আইনানুগ ব্যবস্থা গ্রহণ করা যেতে পারে।",
+            "fine_amount": "",
+            "details": {
+                "presentation_summary": "M.S Adiba Online নামক Thana/Upazila আইএসপি লাইসেন্সধারী প্রতিষ্ঠানের বিরুদ্ধে আনীত অভিযোগ ও অপারেশনাল কার্যক্রমের তদন্ত প্রতিবেদন পর্যালোচনা।",
+                "tables": [],
+                "implementation": "ইএন্ডআই ডিরেক্টরেট।",
+                "assigned_inspector": "",
+                "case_status": "চলমান"
+            }
+        },
+        {
+            "agenda_no": "০২",
+            "subject": "Walkie-Talkie ব্যবহার সংক্রান্ত আইনানুগ ব্যবস্থা গ্রহণ প্রসঙ্গে।",
+            "decision": "অবৈধ Walkie-Talkie ব্যবহারের বিরুদ্ধে প্রয়োজনীয় আইনানুগ ব্যবস্থা গ্রহণ।",
+            "fine_amount": "",
+            "details": {
+                "presentation_summary": "Walkie-Talkie এর অবৈধ ব্যবহার সংক্রান্ত বিষয়াবলি পর্যালোচনা।",
+                "tables": [],
+                "implementation": "ইএন্ডআই ডিরেক্টরেট।",
+                "assigned_inspector": "",
+                "case_status": "চলমান"
+            }
+        },
+        {
+            "agenda_no": "০৩",
+            "subject": "BDlink এর আনীত অভিযোগের বিষয়ে আলোচনা।",
+            "decision": "BDlink এর বিরুদ্ধে আনীত অভিযোগের বিষয়ে যথাযথ ব্যবস্থা গ্রহণ।",
+            "fine_amount": "",
+            "details": {
+                "presentation_summary": "BDlink এর বিরুদ্ধে আনীত অভিযোগের বিষয়ে আলোচনা ও সিদ্ধান্ত গ্রহণ।",
+                "tables": [],
+                "implementation": "ইএন্ডআই ডিরেক্টরেট।",
+                "assigned_inspector": "",
+                "case_status": "চলমান"
+            }
+        },
+        {
+            "agenda_no": "০৪",
+            "subject": "Fiber@Home এর বিষয়ে আলোচনা।",
+            "decision": "Fiber@Home এর বিষয়ে যথাযথ ব্যবস্থা গ্রহণ।",
+            "fine_amount": "",
+            "details": {
+                "presentation_summary": "Fiber@Home এর বিষয়ে আলোচনা ও সিদ্ধান্ত গ্রহণ।",
+                "tables": [],
+                "implementation": "ইএন্ডআই ডিরেক্টরেট।",
+                "assigned_inspector": "",
+                "case_status": "চলমান"
+            }
+        }
+    ]
+}
 
 commissioner_instructions = [
     {
