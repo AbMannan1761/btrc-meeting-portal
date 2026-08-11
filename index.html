@@ -1776,23 +1776,7 @@
             stroke: #34d399;
         }
     
-        /* Editable Elements Style */
-        [contenteditable="true"] {
-            outline: 1px dashed rgba(59, 130, 246, 0.4);
-            outline-offset: 3px;
-            border-radius: 4px;
-            cursor: text;
-            transition: outline-color 0.2s ease, background 0.2s ease;
-        }
-        [contenteditable="true"]:hover {
-            outline-color: var(--accent-blue);
-            background: rgba(59, 130, 246, 0.08);
-        }
-        [contenteditable="true"]:focus {
-            outline: 2px solid var(--accent-blue);
-            background: rgba(59, 130, 246, 0.12);
-            box-shadow: 0 0 10px rgba(59, 130, 246, 0.3);
-        }
+        
 
     </style>
 </head>
@@ -6659,12 +6643,12 @@
                         a.details.tables.forEach(tableData => {
                             tablesHtml += `<div class="table-responsive"><table>`;
                             let thead = '<tr>';
-                            tableData.headers.forEach(h => { thead += `<th contenteditable="true" title="সম্পাদনা করতে ক্লিক করুন">${h}</th>`; });
+                            tableData.headers.forEach(h => { thead += `<th>${h}</th>`; });
                             thead += '</tr>';
                             let tbody = '';
                             tableData.rows.forEach(r => {
                                 tbody += '<tr>';
-                                r.forEach(cell => { tbody += `<td contenteditable="true" title="সম্পাদনা করতে ক্লিক করুন">${cell}</td>`; });
+                                r.forEach(cell => { tbody += `<td>${cell}</td>`; });
                                 tbody += '</tr>';
                             });
                             tablesHtml += `<thead>${thead}</thead><tbody>${tbody}</tbody></table></div>`;
@@ -6689,7 +6673,7 @@
                                 <span class="agenda-no-badge">এজেন্ডা ${enToBd(a.agenda_no)}</span>
                                 <span class="meta-badge category">${cat}</span>
                                 <span class="meta-badge status ${isResolved ? 'resolved' : ''}">${status}</span>
-                                <span class="header-subject-preview" contenteditable="true" title="সম্পাদনা করতে ক্লিক করুন">${subjectPreview}</span>
+                                <span class="header-subject-preview">${subjectPreview}</span>
                             </div>
                             <div class="header-right-info">
                                 ${a.fine_amount ? `<span class="header-fine-badge">জরিমানা: ${enToBd(bdToEn(a.fine_amount))} টাকা</span>` : ''}
@@ -6700,18 +6684,18 @@
                             <!-- Part 1: Subject -->
                             <div class="agenda-expanded-part">
                                 <div class="part-title">১. এজেন্ডার বিষয় (Subject)</div>
-                                <div class="part-content subject-text" contenteditable="true" title="সম্পাদনা করতে ক্লিক করুন">${a.subject}</div>
+                                <div class="part-content subject-text">${a.subject}</div>
                             </div>
                             
                             <!-- Part 2: Body -->
                             <div class="agenda-expanded-part">
                                 <div class="part-title">২. প্রেক্ষাপট ও পরিদর্শনের সারসংক্ষেপ (Body)</div>
                                 <div class="part-content">
-                                    <div style="margin-bottom: 0.75rem;" contenteditable="true" title="সম্পাদনা করতে ক্লিক করুন">${a.details.presentation_summary}</div>
+                                    <div style="margin-bottom: 0.75rem;">${a.details.presentation_summary}</div>
                                     ${tablesHtml}
                                     <div style="margin-top: 1rem; font-size: 0.85rem; color: var(--text-muted);">
                                         
-                                        <strong>বাস্তবায়নকারী বিভাগ/দপ্তর:</strong> <span contenteditable="true" title="সম্পাদনা করতে ক্লিক করুন">${a.details.implementation || 'এনফোর্সমেন্ট এন্ড ইন্সপেকশন ডিরেক্টরেট'}</span>
+                                        <strong>বাস্তবায়নকারী বিভাগ/দপ্তর:</strong> <span>${a.details.implementation || 'এনফোর্সমেন্ট এন্ড ইন্সপেকশন ডিরেক্টরেট'}</span>
                                     </div>
                                 </div>
                             </div>
@@ -6720,7 +6704,7 @@
                             <div class="agenda-expanded-part">
                                 <div class="part-title">৩. কমিশন সভার সিদ্ধান্ত (Decision)</div>
                                 <div class="part-content decision-box">
-                                    <div class="decision-text" contenteditable="true" title="সম্পাদনা করতে ক্লিক করুন">${formattedDecision}</div>
+                                    <div class="decision-text">${formattedDecision}</div>
                                 </div>
                             </div>
 
@@ -6987,12 +6971,12 @@
                 agenda.details.tables.forEach(tableData => {
                     tablesHtml += `<table class="pdf-table">`;
                     let thead = '<tr>';
-                    tableData.headers.forEach(h => { thead += `<th contenteditable="true" title="সম্পাদনা করতে ক্লিক করুন">${h}</th>`; });
+                    tableData.headers.forEach(h => { thead += `<th>${h}</th>`; });
                     thead += '</tr>';
                     let tbody = '';
                     tableData.rows.forEach(r => {
                         tbody += '<tr>';
-                        r.forEach(cell => { tbody += `<td contenteditable="true" title="সম্পাদনা করতে ক্লিক করুন">${cell}</td>`; });
+                        r.forEach(cell => { tbody += `<td>${cell}</td>`; });
                         tbody += '</tr>';
                     });
                     tablesHtml += `<thead>${thead}</thead><tbody>${tbody}</tbody></table>`;
