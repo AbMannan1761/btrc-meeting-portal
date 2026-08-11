@@ -6254,7 +6254,103 @@
         }
 
         // Initialize and compute stats
+        
+        // Auto-fetch Live Data directly from Google Sheets on Page Load
+        const LIVE_GOOGLE_SHEET_CSV = "https://docs.google.com/spreadsheets/d/1kXlVrNZ9wEGPTrW5ClvGcoi037Oad8rk/export?format=csv&gid=832412813";
+
+        function parseCSVLine(line) {
+            const result = [];
+            let start = 0;
+            let inQuotes = false;
+            for (let i = 0; i < line.length; i++) {
+                if (line[i] === '"') {
+                    inQuotes = !inQuotes;
+                } else if (line[i] === ',' && !inQuotes) {
+                    let field = line.substring(start, i).trim();
+                    if (field.startsWith('"') && field.endsWith('"')) {
+                        field = field.substring(1, field.length - 1).replace(/""/g, '"');
+                    }
+                    result.push(field);
+                    start = i + 1;
+                }
+            }
+            let lastField = line.substring(start).trim();
+            if (lastField.startsWith('"') && lastField.endsWith('"')) {
+                lastField = lastField.substring(1, lastField.length - 1).replace(/""/g, '"');
+            }
+            result.push(lastField);
+            return result;
+        }
+
+        async function syncLiveGoogleSheetData() {
+            try {
+                const res = await fetch(LIVE_GOOGLE_SHEET_CSV);
+                if (!res.ok) return;
+                const text = await res.text();
+                const lines = text.split(/\r?\n/);
+                if (lines.length < 2) return;
+
+                const headers = parseCSVLine(lines[0]);
+                const mNoIdx = headers.indexOf('মিটিং নম্বর');
+                const mDateIdx = headers.indexOf('মিটিংয়ের তারিখ');
+                const aNoIdx = headers.indexOf('এজেন্ডা নম্বর');
+                const subjIdx = headers.indexOf('বিষয়');
+                const decIdx = headers.indexOf('সিদ্ধান্ত');
+                const fineIdx = headers.indexOf('প্রশাসনিক জরিমানা (টাকা)');
+                const implIdx = headers.indexOf('বাস্তবায়নকারী বিভাগ');
+
+                if (mNoIdx === -1 || decIdx === -1) return;
+
+                const newMeetingsDict = {};
+                for (let i = 1; i < lines.length; i++) {
+                    if (!lines[i].trim()) continue;
+                    const row = parseCSVLine(lines[i]);
+                    const mNo = row[mNoIdx] || '';
+                    if (!mNo) continue;
+                    const mDate = row[mDateIdx] || '';
+                    const aNo = row[aNoIdx] || '';
+                    const subject = row[subjIdx] || '';
+                    const decision = row[decIdx] || '';
+                    const fine = row[fineIdx] || '';
+                    const impl = row[implIdx] || '';
+
+                    if (!newMeetingsDict[mNo]) {
+                        newMeetingsDict[mNo] = {
+                            meeting_number: mNo,
+                            meeting_date: mDate,
+                            agendas: []
+                        };
+                    }
+                    newMeetingsDict[mNo].agendas.push({
+                        agenda_no: aNo || (newMeetingsDict[mNo].agendas.length + 1).toString(),
+                        subject: subject,
+                        decision: decision,
+                        fine_amount: fine,
+                        details: {
+                            presentation_summary: 'বিষয়: ' + subject,
+                            tables: [],
+                            implementation: impl || 'এনফোর্সমেন্ট এন্ড ইন্সপেকশন ডিরেক্টরেট',
+                            assigned_inspector: '',
+                            case_status: 'চলমান'
+                        }
+                    });
+                }
+
+                const newMeetingsList = Object.values(newMeetingsDict);
+                if (newMeetingsList.length > 0) {
+                    masterDb.meetings = newMeetingsList;
+                    meetings = masterDb.meetings;
+                    init();
+                    filterMeetings();
+                    console.log('✅ Real-time Google Sheet sync successful!');
+                }
+            } catch (e) {
+                console.log('Using pre-rendered cache data.');
+            }
+        }
+
         function init() {
+            syncLiveGoogleSheetData();
             // Compute total stats
             document.getElementById('stat-meetings-count').innerText = enToBd(meetings.length) + 'টি';
             
