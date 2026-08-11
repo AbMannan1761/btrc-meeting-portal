@@ -7605,7 +7605,7 @@
                                     <div style="margin-bottom: 0.75rem;" contenteditable="true" title="সম্পাদনা করতে ক্লিক করুন">${a.details.presentation_summary}</div>
                                     ${tablesHtml}
                                     <div style="margin-top: 1rem; font-size: 0.85rem; color: var(--text-muted);">
-                                        <strong>দায়িত্বপ্রাপ্ত কর্মকর্তা:</strong> <span contenteditable="true" title="সম্পাদনা করতে ক্লিক করুন">${a.details.assigned_inspector || 'এনফোর্সমেন্ট টিম'}</span> | 
+                                        
                                         <strong>বাস্তবায়নকারী বিভাগ/দপ্তর:</strong> <span contenteditable="true" title="সম্পাদনা করতে ক্লিক করুন">${a.details.implementation || 'এনফোর্সমেন্ট এন্ড ইন্সপেকশন ডিরেক্টরেট'}</span>
                                     </div>
                                 </div>
@@ -7728,7 +7728,7 @@
                 statusBadge.className = 'meta-badge status';
             }
 
-            document.getElementById('detail-inspector').innerHTML = `<strong>দায়িত্বপ্রাপ্ত কর্মকর্তা:</strong> ${agenda.details.assigned_inspector || 'এনফোর্সমেন্ট টিম'}`;
+            document.getElementById('detail-inspector').style.display = 'none';
             document.getElementById('detail-due-status').innerHTML = `<strong>কেইস অবস্থা:</strong> ${status}`;
 
             // Decision (Block B - Crimson Callout Card)
@@ -8052,7 +8052,7 @@
                     <div class="section-content">${agenda.details.presentation_summary}</div>
                     ${tablesHtml}
                     <div style="margin-top: 15px; font-size: 12px; color: #4a5568;">
-                        <b>দায়িত্বপ্রাপ্ত কর্মকর্তা:</b> ${agenda.details.assigned_inspector || 'এনফোর্সমেন্ট টিম'} <br>
+                        
                         <b>বাস্তবায়নকারী বিভাগ/দপ্তর:</b> ${agenda.details.implementation || 'এনফোর্সমেন্ট এন্ড ইন্সপেকশন ডিরেক্টরেট'}
                     </div>
                 </div>
