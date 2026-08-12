@@ -9,6 +9,11 @@
 *.png
 *.txt
 
+# Ignore credentials & secret service account keys
+influential-kit-*.json
+*.json
+!meetings_db.json
+
 # Ignore specific draft folders and presentations
 Meeting presectation for CM SM/
 Commission meeting/
