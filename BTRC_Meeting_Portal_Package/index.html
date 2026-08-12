@@ -1859,6 +1859,16 @@
             text-align: center !important;
         }
 
+        @keyframes sectionPulse {
+            0% { background: rgba(14, 100, 55, 0.25); }
+            100% { background: transparent; }
+        }
+        .section-active-pulse {
+            animation: sectionPulse 1.2s ease-out;
+            border-radius: 8px;
+            padding: 4px 8px;
+        }
+
         .header-title-container {
             display: flex !important;
             align-items: center !important;
@@ -6718,7 +6728,19 @@
                     e.preventDefault();
                     const targetEl = document.getElementById(`meeting-sec-${mNo}`);
                     if (targetEl) {
-                        targetEl.scrollIntoView({ behavior: 'smooth' });
+                        const headerOffset = 180;
+                        const elementPosition = targetEl.getBoundingClientRect().top;
+                        const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+                        
+                        window.scrollTo({
+                            top: offsetPosition,
+                            behavior: 'auto'
+                        });
+
+                        secHeader.classList.add('section-active-pulse');
+                        setTimeout(() => {
+                            secHeader.classList.remove('section-active-pulse');
+                        }, 1200);
                     }
                     // Set active class
                     document.querySelectorAll('.toc-link').forEach(link => link.classList.remove('active'));
