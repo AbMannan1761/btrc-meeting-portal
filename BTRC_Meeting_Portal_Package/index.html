@@ -1852,23 +1852,19 @@
     
         /* Center Header Title Container */
         header {
-            display: grid !important;
-            grid-template-columns: auto 1fr auto !important;
+            display: flex !important;
+            justify-content: center !important;
             align-items: center !important;
-            padding: 0.75rem 2rem !important;
-        }
-
-        .tab-switcher {
-            grid-column: 1 !important;
-            justify-self: start !important;
-            align-self: flex-start !important;
-            margin-top: 8px !important;
+            padding: 0.85rem 2rem !important;
+            text-align: center !important;
         }
 
         .header-title-container {
-            grid-column: 2 !important;
-            justify-self: center !important;
-            text-align: center !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            gap: 1.25rem !important;
+            margin: 0 auto !important;
         }
 
     </style>
