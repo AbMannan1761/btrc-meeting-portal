@@ -519,27 +519,38 @@
         }
 
 
-        /* Premium Search Panel */
+        /* Premium Sticky Search Panel */
         .search-panel-container {
             background: var(--bg-card);
             backdrop-filter: blur(16px);
             border: 1px solid var(--border-glass);
             border-radius: 14px;
-            padding: 1rem 1.25rem;
+            padding: 0.75rem 1.25rem;
             margin-bottom: 1rem;
-            box-shadow: var(--shadow-glass);
+            box-shadow: 0 4px 16px rgba(14, 100, 55, 0.10);
             display: flex;
             flex-direction: column;
             gap: 0.75rem;
+            position: sticky;
+            top: 72px;
+            z-index: 95;
         }
 
         .search-panel-header {
             display: flex;
             align-items: center;
+            justify-content: space-between;
             gap: 0.5rem;
             color: var(--accent-blue);
+            cursor: pointer;
+            user-select: none;
+            padding: 0.25rem 0;
+            transition: all 0.2s ease;
+        }
+
+        .search-panel-header.open {
             border-bottom: 1px solid rgba(14, 100, 55, 0.12);
-            padding-bottom: 0.4rem;
+            padding-bottom: 0.6rem;
         }
 
         .search-panel-header h2 {
@@ -547,6 +558,27 @@
             font-weight: 600;
             color: #064e3b;
             font-family: 'Nikosh', 'Noto Sans Bengali', sans-serif;
+            margin: 0;
+        }
+
+        .search-toggle-badge {
+            display: flex;
+            align-items: center;
+            gap: 0.35rem;
+            background: rgba(14, 100, 55, 0.08);
+            border: 1px solid rgba(14, 100, 55, 0.2);
+            color: #0e6437;
+            padding: 0.3rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            font-family: 'Nikosh', 'Noto Sans Bengali', sans-serif;
+            transition: all 0.2s ease;
+        }
+
+        .search-panel-header:hover .search-toggle-badge {
+            background: #0e6437;
+            color: #ffffff;
         }
 
         .search-panel-body {
@@ -1881,11 +1913,17 @@
             <div id="layer-grid-view">
                 <!-- Dedicated Global Search & Analytics Panel -->
                 <div class="search-panel-container">
-                    <div class="search-panel-header">
-                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg>
-                        <h2>কমিশন সভার এজেন্ডা ও সিদ্ধান্ত অনুসন্ধান প্যানেল</h2>
+                    <div class="search-panel-header" id="search-panel-header" onclick="toggleSearchPanel()">
+                        <div style="display: flex; align-items: center; gap: 0.5rem;">
+                            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg>
+                            <h2>কমিশন সভার এজেন্ডা ও সিদ্ধান্ত অনুসন্ধান প্যানেল</h2>
+                        </div>
+                        <div class="search-toggle-badge" id="search-toggle-badge">
+                            <span id="search-toggle-text">ফিল্টার ফিল্ড দেখুন</span>
+                            <svg id="search-chevron" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="transition: transform 0.3s ease;"><path d="m6 9 6 6 6-6"></path></svg>
+                        </div>
                     </div>
-                    <div class="search-panel-body">
+                    <div class="search-panel-body" id="search-panel-body" style="display: none;">
                         <div class="main-search-row">
                             <button class="search-action-btn" onclick="filterMeetings()">অনুসন্ধান</button>
                             <input type="text" id="search-bar" class="search-input-premium" placeholder="প্রতিষ্ঠান, সভার নম্বর, এজেন্ডার বিষয়বস্তু বা সিদ্ধান্ত দিয়ে অনুসন্ধান করুন...">
@@ -6502,6 +6540,28 @@
                 `;
                 grid.appendChild(card);
             });
+        }
+
+        // Toggle Search Panel Function
+        function toggleSearchPanel() {
+            const body = document.getElementById('search-panel-body');
+            const header = document.getElementById('search-panel-header');
+            const chevron = document.getElementById('search-chevron');
+            const text = document.getElementById('search-toggle-text');
+            
+            if (!body) return;
+            
+            if (body.style.display === 'none' || body.style.display === '') {
+                body.style.display = 'flex';
+                if (header) header.classList.add('open');
+                if (chevron) chevron.style.transform = 'rotate(180deg)';
+                if (text) text.innerText = 'প্যানেল গুটিয়ে নিন';
+            } else {
+                body.style.display = 'none';
+                if (header) header.classList.remove('open');
+                if (chevron) chevron.style.transform = 'rotate(0deg)';
+                if (text) text.innerText = 'ফিল্টার ফিল্ড দেখুন';
+            }
         }
 
         // View Mode Toggle Handler
