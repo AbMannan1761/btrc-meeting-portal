@@ -68,17 +68,17 @@
         }
 
         .logo-placeholder {
-            width: 56px;
-            height: 56px;
+            width: 72px;
+            height: 72px;
             background: #ffffff;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
-            border: 2px solid rgba(255, 255, 255, 0.4);
+            box-shadow: 0 0 18px rgba(255, 255, 255, 0.4);
+            border: 3px solid rgba(255, 255, 255, 0.8);
             object-fit: contain;
-            padding: 3px;
+            padding: 4px;
         }
 
         .header-title h1 {
@@ -6831,10 +6831,6 @@
                                 <div class="part-content">
                                     <div style="margin-bottom: 0.75rem;">${a.details.presentation_summary}</div>
                                     ${tablesHtml}
-                                    <div style="margin-top: 1rem; font-size: 0.85rem; color: var(--text-muted);">
-                                        
-                                        <strong>বাস্তবায়নকারী বিভাগ/দপ্তর:</strong> <span>${a.details.implementation || 'এনফোর্সমেন্ট এন্ড ইন্সপেকশন ডিরেক্টরেট'}</span>
-                                    </div>
                                 </div>
                             </div>
                             
@@ -6844,6 +6840,11 @@
                                 <div class="part-content decision-box">
                                     <div class="decision-text">${formattedDecision}</div>
                                 </div>
+                            </div>
+
+                            <!-- Implementing Department / Division (Moved to bottom below Decision) -->
+                            <div class="agenda-impl-dept-box" style="margin-top: 0.85rem; padding: 0.65rem 1.1rem; background: rgba(14, 100, 55, 0.05); border-left: 4px solid #0e6437; border-radius: 8px; font-size: 0.9rem; color: #064e3b; font-weight: 500;">
+                                <strong>বাস্তবায়নকারী বিভাগ/দপ্তর:</strong> <span>${a.details.implementation || 'এনফোর্সমেন্ট এন্ড ইন্সপেকশন ডিরেক্টরেট'}</span>
                             </div>
 
                             <!-- PDF Download Action Row -->
