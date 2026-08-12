@@ -1802,19 +1802,19 @@
         /* Center Header Title Container */
         header {
             display: grid !important;
-            grid-template-columns: 1fr auto 1fr !important;
+            grid-template-columns: auto 1fr auto !important;
             align-items: center !important;
+        }
+
+        .tab-switcher {
+            grid-column: 1 !important;
+            justify-self: start !important;
         }
 
         .header-title-container {
             grid-column: 2 !important;
             justify-self: center !important;
             text-align: center !important;
-        }
-
-        .tab-switcher {
-            grid-column: 3 !important;
-            justify-self: end !important;
         }
 
     </style>
