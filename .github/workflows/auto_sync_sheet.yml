@@ -37,13 +37,15 @@ jobs:
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           
-          # Stage portal files (using force for files covered by gitignore if needed)
+          # Stage updated portal database and index files
           git add index.html meetings_db.json
-          git add -f BTRC_Meeting_Portal_Package/index.html BTRC_Meeting_Portal_Package/meetings_db.json 2>/dev/null || true
+          git add -f BTRC_Meeting_Portal_Package/index.html BTRC_Meeting_Portal_Package/meetings_db.json || true
           
-          if git diff --staged --quiet; then
-            echo "No new changes from Google Sheet to commit."
-          else
+          if [ -n "$(git status --porcelain)" ]; then
+            echo "Changes detected. Committing and pushing..."
             git commit -m "🤖 Auto-synced latest meeting data from Google Sheet [skip ci]"
+            git pull --rebase origin main || true
             git push origin main
+          else
+            echo "No new changes detected in Google Sheet."
           fi
