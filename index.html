@@ -6123,64 +6123,69 @@
 
         // Initialize and compute stats
         
-        // Auto-fetch Live Data directly from Google Sheets on Page Load
-        const LIVE_GOOGLE_SHEET_CSV = "https://docs.google.com/spreadsheets/d/1kXlVrNZ9wEGPTrW5ClvGcoi037Oad8rk/export?format=csv&gid=832412813";
-
-        function parseCSVLine(line) {
-            const result = [];
-            let start = 0;
-            let inQuotes = false;
-            for (let i = 0; i < line.length; i++) {
-                if (line[i] === '"') {
-                    inQuotes = !inQuotes;
-                } else if (line[i] === ',' && !inQuotes) {
-                    let field = line.substring(start, i).trim();
-                    if (field.startsWith('"') && field.endsWith('"')) {
-                        field = field.substring(1, field.length - 1).replace(/""/g, '"');
-                    }
-                    result.push(field);
-                    start = i + 1;
-                }
-            }
-            let lastField = line.substring(start).trim();
-            if (lastField.startsWith('"') && lastField.endsWith('"')) {
-                lastField = lastField.substring(1, lastField.length - 1).replace(/""/g, '"');
-            }
-            result.push(lastField);
-            return result;
-        }
-
+        // Auto-fetch Live Data directly from Google Sheets via CORS-enabled GViz API
         async function syncLiveGoogleSheetData() {
             try {
-                const res = await fetch(LIVE_GOOGLE_SHEET_CSV);
+                const url = "https://docs.google.com/spreadsheets/d/1kXlVrNZ9wEGPTrW5ClvGcoi037Oad8rk/gviz/tq?tqx=out:json";
+                const res = await fetch(url);
                 if (!res.ok) return;
                 const text = await res.text();
-                const lines = text.split(/\r?\n/);
-                if (lines.length < 2) return;
+                const jsonStr = text.substring(text.indexOf('{'), text.lastIndexOf('}') + 1);
+                const data = JSON.parse(jsonStr);
+                
+                if (!data || !data.table || !data.table.rows) return;
 
-                const headers = parseCSVLine(lines[0]);
-                const mNoIdx = headers.indexOf('মিটিং নম্বর');
-                const mDateIdx = headers.indexOf('মিটিংয়ের তারিখ');
-                const aNoIdx = headers.indexOf('এজেন্ডা নম্বর');
-                const subjIdx = headers.indexOf('বিষয়');
-                const decIdx = headers.indexOf('সিদ্ধান্ত');
-                const fineIdx = headers.indexOf('প্রশাসনিক জরিমানা (টাকা)');
-                const implIdx = headers.indexOf('বাস্তবায়নকারী বিভাগ');
+                const cols = (data.table.cols || []).map(c => (c && c.label ? c.label.trim() : ''));
+                
+                // Find column indices
+                const findIdx = (keywords) => {
+                    for (let i = 0; i < cols.length; i++) {
+                        for (let kw of keywords) {
+                            if (cols[i].includes(kw)) return i;
+                        }
+                    }
+                    return -1;
+                };
 
-                if (mNoIdx === -1 || decIdx === -1) return;
+                let mNoIdx = findIdx(['মিটিং নম্বর', 'কমিশন সভা']);
+                let mDateIdx = findIdx(['তারিখ']);
+                let aNoIdx = findIdx(['এজেন্ডা নম্বর', 'এজেন্ডা নং']);
+                let subjIdx = findIdx(['বিষয়']);
+                let decIdx = findIdx(['সিদ্ধান্ত']);
+                let fineIdx = findIdx(['জরিমানা']);
+                let implIdx = findIdx(['বাস্তবায়ন', 'দপ্তর', 'বিভাগ']);
+
+                if (mNoIdx === -1) mNoIdx = 0;
+                if (mDateIdx === -1) mDateIdx = 1;
+                if (aNoIdx === -1) aNoIdx = 2;
+                if (subjIdx === -1) subjIdx = 3;
+                if (decIdx === -1) decIdx = 4;
+                if (fineIdx === -1) fineIdx = 5;
+                if (implIdx === -1) implIdx = 6;
 
                 const newMeetingsDict = {};
-                for (let i = 1; i < lines.length; i++) {
-                    if (!lines[i].trim()) continue;
-                    const row = parseCSVLine(lines[i]);
-                    const mNo = row[mNoIdx] || '';
-                    if (!mNo) continue;
-                    const mDate = row[mDateIdx] || '';
-                    const aNo = row[aNoIdx] || '';
-                    const subject = row[subjIdx] || '';
-                    const decision = row[decIdx] || '';
-                    const fine = row[fineIdx] || '';
-                    const impl = row[implIdx] || '';
+                for (let r of data.table.rows) {
+                    if (!r || !r.c) continue;
+                    const getVal = (idx) => {
+                        if (idx < 0 || idx >= r.c.length || !r.c[idx]) return '';
+                        const cell = r.c[idx];
+                        if (cell.v === null || cell.v === undefined) return '';
+                        return (cell.f ? cell.f : String(cell.v)).trim();
+                    };
+
+                    let mNo = getVal(mNoIdx);
+                    if (!mNo || mNo === 'মিটিং নম্বর') continue;
+                    
+                    if (!mNo.includes('তম') && !mNo.toLowerCase().includes('th') && !mNo.includes('মিটিং')) {
+                        mNo = mNo + 'তম';
+                    }
+
+                    const mDate = getVal(mDateIdx);
+                    const aNo = getVal(aNoIdx);
+                    const subject = getVal(subjIdx);
+                    const decision = getVal(decIdx);
+                    const fine = getVal(fineIdx);
+                    const impl = getVal(implIdx);
 
                     if (!newMeetingsDict[mNo]) {
                         newMeetingsDict[mNo] = {
@@ -6189,8 +6194,9 @@
                             agendas: []
                         };
                     }
+
                     newMeetingsDict[mNo].agendas.push({
-                        agenda_no: aNo || (newMeetingsDict[mNo].agendas.length + 1).toString(),
+                        agenda_no: aNo || String(newMeetingsDict[mNo].agendas.length + 1),
                         subject: subject,
                         decision: decision,
                         fine_amount: fine,
@@ -6205,11 +6211,12 @@
                 }
 
                 const newMeetingsList = Object.values(newMeetingsDict);
-                if (newMeetingsList.length > 5) {
+                if (newMeetingsList.length > 0) {
                     masterDb.meetings = newMeetingsList;
                     meetings = masterDb.meetings;
                     refreshPortalUI();
-                    console.log('✅ Real-time Google Sheet sync successful!');
+                    filterMeetings();
+                    console.log('✅ Real-time Google Sheet GViz live sync successful!', meetings.length, 'meetings');
                 }
             } catch (e) {
                 console.log('Using pre-rendered cache data:', e);
