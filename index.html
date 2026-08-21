@@ -6613,28 +6613,14 @@
                             </div>
                         </div>
                         <div class="agenda-list-card-body">
-                            <!-- Part 1: Subject -->
+                            <!-- Decision Section -->
                             <div class="agenda-expanded-part">
-                                <div class="part-title">১. এজেন্ডার বিষয় (Subject)</div>
-                                <div class="part-content subject-text">${a.subject}</div>
-                            </div>
-                            
-                            <!-- Part 2: Body -->
-                            <div class="agenda-expanded-part">
-                                <div class="part-title">২. প্রেক্ষাপট ও পরিদর্শনের সারসংক্ষেপ (Body)</div>
-                                <div class="part-content">
-                                    <div style="margin-bottom: 0.75rem;">${a.details.presentation_summary}</div>
-                                    ${tablesHtml}
-                                </div>
-                            </div>
-                            
-                            <!-- Part 3: Decision -->
-                            <div class="agenda-expanded-part">
-                                <div class="part-title">৩. কমিশন সভার সিদ্ধান্ত (Decision)</div>
+                                <div class="part-title">কমিশন সভার সিদ্ধান্ত</div>
                                 <div class="part-content decision-box">
                                     <div class="decision-text">${formattedDecision}</div>
                                 </div>
                             </div>
+                            ${tablesHtml ? `<div style="margin-top: 0.75rem;">${tablesHtml}</div>` : ''}
 
                             <!-- Implementing Department / Division (Moved to bottom below Decision) -->
                             <div class="agenda-impl-dept-box" style="margin-top: 0.85rem; padding: 0.65rem 1.1rem; background: rgba(14, 100, 55, 0.05); border-left: 4px solid #0e6437; border-radius: 8px; font-size: 0.9rem; color: #064e3b; font-weight: 500;">
@@ -7065,12 +7051,12 @@
                 </div>
 
                 <div class="agenda-section">
-                    <div class="section-title">১. এজেন্ডার বিষয় (Subject)</div>
+                    <div class="section-title">১. এজেন্ডার বিষয়</div>
                     <div class="section-content subject-text">${agenda.subject}</div>
                 </div>
 
                 <div class="agenda-section">
-                    <div class="section-title">২. প্রেক্ষাপট ও পরিদর্শনের সারসংক্ষেপ (Background & Summary)</div>
+                    <div class="section-title">২. প্রেক্ষাপট ও পরিদর্শনের সারসংক্ষেপ</div>
                     <div class="section-content">${agenda.details.presentation_summary}</div>
                     ${tablesHtml}
                     <div style="margin-top: 15px; font-size: 12px; color: #4a5568;">
@@ -7080,7 +7066,7 @@
                 </div>
 
                 <div class="agenda-section">
-                    <div class="section-title">৩. কমিশন সভার সিদ্ধান্ত (Commission Decision)</div>
+                    <div class="section-title">৩. কমিশন সভার সিদ্ধান্ত</div>
                     <div class="decision-box">
                         ${formattedDecision}
                     </div>
