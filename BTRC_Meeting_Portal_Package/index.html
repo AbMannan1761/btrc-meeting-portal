@@ -529,39 +529,43 @@
         }
 
 
-        /* Premium Sticky Search Panel */
+        /* Premium Fixed Search Panel — stays visible while scrolling */
         .search-panel-container {
             background: #ffffff;
             backdrop-filter: blur(16px);
             border: 2px solid #0e6437 !important;
             border-radius: 25px;
             padding: 0.45rem 1.15rem;
-            margin-bottom: 0.8rem;
             box-shadow: 0 4px 14px rgba(14, 100, 55, 0.12) !important;
             display: inline-flex;
             flex-direction: column;
             width: fit-content;
-            max-width: 100%;
+            max-width: calc(100vw - 3rem);
             gap: 0.5rem;
-            position: sticky !important;
-            top: 84px !important;
-            z-index: 95 !important;
+            position: fixed !important;
+            top: 90px !important;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 950 !important;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             cursor: pointer;
         }
 
         .search-panel-container:not(.expanded):hover {
             background: #f0fdf4;
-            transform: translateY(-2px);
             box-shadow: 0 6px 20px rgba(14, 100, 55, 0.2) !important;
         }
 
         .search-panel-container.expanded {
             display: flex;
-            width: 100%;
+            width: calc(100vw - 3rem);
+            max-width: 1350px;
             border-radius: 12px;
             padding: 0.75rem 1.25rem;
             cursor: default;
+            top: 90px !important;
+            left: 50%;
+            transform: translateX(-50%);
         }
 
         .search-panel-header {
@@ -1461,10 +1465,11 @@
                 margin-top: 0.15rem;
             }
             .search-panel-container {
-                padding: 0.75rem;
-                margin-bottom: 1rem;
+                padding: 0.5rem 0.9rem;
                 gap: 0.75rem;
-                border-radius: 12px;
+                border-radius: 20px;
+                top: 80px !important;
+                max-width: calc(100vw - 1rem);
             }
             .search-panel-header {
                 gap: 0.5rem;
@@ -2211,8 +2216,9 @@
             </div>
 
             <!-- Dashboard Grid View (Layer 1) -->
-            <div id="layer-grid-view">
+            <div id="layer-grid-view" style="padding-top: 60px;">
                 <!-- Dedicated Global Search & Analytics Panel -->
+
                 <div class="search-panel-container">
                     <div class="search-panel-header" id="search-panel-header" onclick="toggleSearchPanel()">
                         <div style="display: flex; align-items: center; gap: 0.5rem;">
