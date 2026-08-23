@@ -1806,9 +1806,9 @@
 
         .download-pdf-btn {
             background: linear-gradient(135deg, #10b981, #0d9488);
-            color: #0d2818;
+            color: #ffffff;
             border: none;
-            padding: 0.65rem 1.5rem;
+            padding: 0.65rem 1.25rem;
             border-radius: 8px;
             font-weight: 600;
             font-size: 0.9rem;
@@ -1830,6 +1830,34 @@
 
         .download-pdf-btn svg {
             stroke: #ffffff;
+        }
+
+        .view-pdf-btn {
+            background: rgba(14, 100, 55, 0.08);
+            color: #0e6437;
+            border: 1px solid rgba(14, 100, 55, 0.25);
+            padding: 0.65rem 1.25rem;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-family: 'Nikosh', 'Noto Sans Bengali', sans-serif;
+            text-decoration: none;
+        }
+
+        .view-pdf-btn:hover {
+            background: rgba(14, 100, 55, 0.15);
+            border-color: #0e6437;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(14, 100, 55, 0.15);
+        }
+
+        .view-pdf-btn svg {
+            stroke: #0e6437;
         }
 
         .download-pdf-btn-small {
@@ -1857,6 +1885,33 @@
 
         .download-pdf-btn-small svg {
             stroke: #34d399;
+        }
+
+        .view-pdf-btn-small {
+            background: rgba(59, 130, 246, 0.15);
+            color: #60a5fa;
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+            font-family: 'Nikosh', 'Noto Sans Bengali', sans-serif;
+            text-decoration: none;
+        }
+
+        .view-pdf-btn-small:hover {
+            background: rgba(59, 130, 246, 0.25);
+            border-color: #60a5fa;
+            box-shadow: 0 0 8px rgba(59, 130, 246, 0.2);
+        }
+
+        .view-pdf-btn-small svg {
+            stroke: #60a5fa;
         }
     
         
@@ -2438,6 +2493,9 @@
                 <span id="pdf-modal-heading">কমিশন সভার মূল কার্যবিবরণী (PDF)</span>
             </div>
             <div class="pdf-modal-actions">
+                <button class="pdf-action-btn" id="pdf-download-btn" onclick="downloadCurrentPdf(event)" title="সরাসরি ডাউনলোড করুন">
+                    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4m4-5 5 5 5-5m-5 5V3"></path></svg>
+                </button>
                 <button class="pdf-action-btn" id="pdf-print-btn" onclick="printCurrentPdf(event)" title="PDF প্রিন্ট করুন">
                     <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
                 </button>
@@ -7556,6 +7614,27 @@
             const meeting = meetings[activeMeetingIndex];
             if (!meeting) return;
             openPdfModal(meeting.meeting_number);
+        }
+
+        function downloadCurrentPdf(e) {
+            if (e) e.stopPropagation();
+            if (!currentOpenPdfUrl) return;
+
+            let downloadUrl = currentOpenPdfUrl;
+            if (currentOpenPdfUrl.includes('/file/d/')) {
+                const match = currentOpenPdfUrl.match(/\/file\/d\/([a-zA-Z0-9_-]+)/);
+                if (match && match[1]) {
+                    downloadUrl = `https://drive.google.com/uc?export=download&id=${match[1]}`;
+                }
+            }
+
+            const a = document.createElement('a');
+            a.href = downloadUrl;
+            a.target = '_blank';
+            a.rel = 'noopener noreferrer';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
         }
 
         // Close on Escape key
