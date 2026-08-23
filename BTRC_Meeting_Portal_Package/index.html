@@ -7319,86 +7319,107 @@
             if (e) e.stopPropagation();
             if (!currentOpenPdfUrl) return;
 
-            // Google Drive file → use /print endpoint directly
             const match = currentOpenPdfUrl.match(/\/file\/d\/([a-zA-Z0-9_-]+)/);
             if (match && match[1]) {
-                // Open print-ready view in a hidden window and trigger print
-                const printWin = window.open(
-                    `https://drive.google.com/file/d/${match[1]}/print`,
-                    '_blank',
-                    'width=900,height=700,scrollbars=yes,resizable=yes'
-                );
-                if (printWin) {
-                    printWin.focus();
-                    // Small delay to let page load, then print
-                    setTimeout(() => {
-                        try { printWin.print(); } catch(err) { /* user will use browser print */ }
-                    }, 1800);
+                // Open Google Drive view URL — user presses Ctrl+P to print
+                const viewUrl = `https://drive.google.com/file/d/${match[1]}/view`;
+                window.open(viewUrl, '_blank');
+
+                // Show a temporary toast instruction
+                let toast = document.getElementById('pdf-print-toast');
+                if (!toast) {
+                    toast = document.createElement('div');
+                    toast.id = 'pdf-print-toast';
+                    toast.style.cssText = `
+                        position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%);
+                        background: #0e6437; color: #fff;
+                        padding: 10px 22px; border-radius: 22px;
+                        font-family: 'Noto Sans Bengali', sans-serif; font-size: 0.92rem;
+                        z-index: 99999; box-shadow: 0 4px 18px rgba(0,0,0,0.25);
+                        pointer-events: none; opacity: 0;
+                        transition: opacity 0.3s;
+                    `;
+                    document.body.appendChild(toast);
                 }
+                toast.textContent = 'নতুন ট্যাবে PDF খুলেছে — Ctrl+P চেপে প্রিন্ট করুন';
+                toast.style.opacity = '1';
+                setTimeout(() => { toast.style.opacity = '0'; }, 3500);
             } else {
-                // Fallback: open in new tab for user to print
                 window.open(currentOpenPdfUrl, '_blank');
             }
         }
 
-        // Scroll Indicator — tracks Google Drive iframe scroll via postMessage
+        // Scroll Indicator — wheel-event based accumulation (works cross-origin)
         let scrollLabelTimer = null;
         function initPdfScrollIndicator() {
-            const iframe   = document.getElementById('pdf-modal-iframe');
-            const thumb    = document.getElementById('pdf-scroll-thumb');
-            const label    = document.getElementById('pdf-scroll-label');
+            const panel   = document.getElementById('pdf-floating-panel');
+            const iframe  = document.getElementById('pdf-modal-iframe');
+            const thumb   = document.getElementById('pdf-scroll-thumb');
+            const label   = document.getElementById('pdf-scroll-label');
             if (!iframe || !thumb || !label) return;
 
-            // Reset indicator when PDF loads
-            iframe.addEventListener('load', () => {
-                thumb.style.top    = '0%';
-                thumb.style.height = '20%';
-                label.textContent  = 'PDF লোড হয়েছে — স্ক্রল করুন';
+            // Virtual scroll state (0–100%)
+            let scrollPct  = 0;
+            const THUMB_H  = 18; // thumb height percent
+
+            function updateThumb() {
+                const clampedPct = Math.max(0, Math.min(100 - THUMB_H, scrollPct));
+                thumb.style.height = THUMB_H + '%';
+                thumb.style.top    = clampedPct + '%';
+            }
+
+            function showLabel(text) {
+                label.textContent = text;
                 label.classList.add('visible');
                 clearTimeout(scrollLabelTimer);
-                scrollLabelTimer = setTimeout(() => label.classList.remove('visible'), 2500);
+                scrollLabelTimer = setTimeout(() => label.classList.remove('visible'), 2000);
+            }
+
+            // Reset on each PDF load
+            iframe.addEventListener('load', () => {
+                scrollPct = 0;
+                updateThumb();
+                showLabel('PDF লোড হয়েছে');
             });
 
-            // Listen for scroll messages sent from Google Drive iframe (postMessage)
+            // Capture wheel events on the PANEL (iframe captures them, re-emit here)
+            // We overlay a transparent capture div over the panel body to intercept wheel
+            const body = panel ? panel.querySelector('.pdf-modal-body') : null;
+            if (body) {
+                // Transparent overlay just for wheel capture
+                let overlay = document.getElementById('pdf-wheel-overlay');
+                if (!overlay) {
+                    overlay = document.createElement('div');
+                    overlay.id = 'pdf-wheel-overlay';
+                    overlay.style.cssText = `
+                        position: absolute; inset: 0;
+                        z-index: 15; pointer-events: none;
+                    `;
+                    body.appendChild(overlay);
+                }
+
+                // Listen on the panel (bubbles from iframe area via pointer capture)
+                panel.addEventListener('wheel', (ev) => {
+                    // delta: positive = scroll down, negative = scroll up
+                    const delta = ev.deltaY > 0 ? 3 : -3;
+                    scrollPct = Math.max(0, Math.min(100 - THUMB_H, scrollPct + delta));
+                    updateThumb();
+                    // Show page estimate (rough: 1% ≈ 1 page in 100-page doc)
+                    const panelHeight = body.clientHeight;
+                    showLabel(`স্ক্রল: ${Math.round(scrollPct / (100 - THUMB_H) * 100)}%`);
+                }, { passive: true });
+            }
+
+            // postMessage from Google Drive (page number data)
             window.addEventListener('message', (event) => {
-                // Google Drive sends scroll data via message
                 if (!event.data || typeof event.data !== 'object') return;
                 const data = event.data;
-
-                // Handle Google Drive viewer scroll event format
-                if (data.type === 'scroll' || data.scrollTop !== undefined || data.pageNumber !== undefined) {
-                    let pct = 0;
-                    if (data.scrollTop !== undefined && data.scrollHeight !== undefined && data.clientHeight !== undefined) {
-                        const scrollable = data.scrollHeight - data.clientHeight;
-                        pct = scrollable > 0 ? Math.min(100, (data.scrollTop / scrollable) * 100) : 0;
-                    } else if (data.pageNumber !== undefined && data.totalPages !== undefined && data.totalPages > 0) {
-                        pct = Math.min(100, ((data.pageNumber - 1) / (data.totalPages - 1)) * 100);
-                        label.textContent = `পৃষ্ঠা ${data.pageNumber} / ${data.totalPages}`;
-                        label.classList.add('visible');
-                        clearTimeout(scrollLabelTimer);
-                        scrollLabelTimer = setTimeout(() => label.classList.remove('visible'), 2000);
-                    }
-                    const thumbH = Math.max(8, Math.min(40, 100 * (iframe.clientHeight / (iframe.contentDocument ? iframe.contentDocument.body.scrollHeight || iframe.clientHeight : iframe.clientHeight))));
-                    thumb.style.height = thumbH + '%';
-                    thumb.style.top    = (pct * (100 - thumbH) / 100) + '%';
+                if (data.pageNumber !== undefined && data.totalPages > 0) {
+                    scrollPct = ((data.pageNumber - 1) / Math.max(1, data.totalPages - 1)) * (100 - THUMB_H);
+                    updateThumb();
+                    showLabel(`পৃষ্ঠা ${data.pageNumber} / ${data.totalPages}`);
                 }
             });
-
-            // Fallback: animate thumb slowly downward on mousemove over the iframe body
-            // (since Google Drive cross-origin blocks direct scroll access)
-            const panel = document.getElementById('pdf-floating-panel');
-            if (panel) {
-                // Simulate scroll tracking via panel mousemove position
-                const body = panel.querySelector('.pdf-modal-body');
-                if (body) {
-                    body.addEventListener('mousemove', (e) => {
-                        const rect = body.getBoundingClientRect();
-                        const relY = e.clientY - rect.top;
-                        const pct = Math.max(0, Math.min(100, (relY / rect.height) * 100));
-                        thumb.style.top = Math.max(0, Math.min(80, pct * 0.8)) + '%';
-                    });
-                }
-            }
         }
 
 
