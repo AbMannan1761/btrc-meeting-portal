@@ -38,7 +38,7 @@ jobs:
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           
           # Stage updated portal database and index files
-          git add index.html meetings_db.json
+          git add index.html meetings_db.json meeting_drive_pdf_map.json
           git add -f BTRC_Meeting_Portal_Package/index.html BTRC_Meeting_Portal_Package/meetings_db.json || true
           
           if [ -n "$(git status --porcelain)" ]; then

@@ -13,6 +13,7 @@
 influential-kit-*.json
 *.json
 !meetings_db.json
+!meeting_drive_pdf_map.json
 
 # Ignore specific draft folders and presentations
 Meeting presectation for CM SM/

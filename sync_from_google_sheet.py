@@ -186,10 +186,8 @@ pdf_inject_code = f"""
 start_idx = html.find('const masterDb = {')
 end_idx = html.find('const banglaDigits =', start_idx)
 if start_idx != -1 and end_idx != -1:
-    substring = html[start_idx:end_idx]
-    last_brace_idx = substring.rfind('};')
     new_text = f'const masterDb = {json_str};\n{pdf_inject_code}\n        '
-    new_html = html[:start_idx] + new_text + html[start_idx + last_brace_idx + 2:]
+    new_html = html[:start_idx] + new_text + html[end_idx:]
 
     with open(html_path, 'w', encoding='utf-8') as f:
         f.write(new_html)
