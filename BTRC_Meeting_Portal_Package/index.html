@@ -2090,6 +2090,51 @@
             display: block;
         }
 
+        /* Scroll Progress Indicator */
+        .pdf-scroll-track {
+            position: absolute;
+            right: 0;
+            top: 0;
+            width: 6px;
+            height: 100%;
+            background: rgba(0,0,0,0.18);
+            border-radius: 0 0 10px 0;
+            z-index: 20;
+            pointer-events: none;
+        }
+        .pdf-scroll-thumb {
+            position: absolute;
+            right: 0;
+            top: 0;
+            width: 6px;
+            background: linear-gradient(180deg, #22c55e 0%, #0e6437 100%);
+            border-radius: 3px;
+            min-height: 28px;
+            transition: top 0.08s linear, height 0.08s linear;
+            box-shadow: 0 0 4px rgba(34,197,94,0.45);
+        }
+        .pdf-scroll-label {
+            position: absolute;
+            right: 10px;
+            bottom: 8px;
+            background: rgba(14,100,55,0.85);
+            color: #fff;
+            font-size: 0.72rem;
+            font-family: 'Noto Sans Bengali', sans-serif;
+            padding: 2px 7px;
+            border-radius: 10px;
+            pointer-events: none;
+            z-index: 21;
+            white-space: nowrap;
+            letter-spacing: 0.5px;
+            backdrop-filter: blur(4px);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        .pdf-scroll-label.visible {
+            opacity: 1;
+        }
+
         .pdf-loading-spinner {
             position: absolute;
             top: 0;
@@ -2374,6 +2419,9 @@
                 <span id="pdf-modal-heading">কমিশন সভার মূল কার্যবিবরণী (PDF)</span>
             </div>
             <div class="pdf-modal-actions">
+                <button class="pdf-action-btn" id="pdf-print-btn" onclick="printCurrentPdf(event)" title="PDF প্রিন্ট করুন">
+                    <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
+                </button>
                 <button class="pdf-action-btn" id="pdf-maximize-btn" onclick="togglePdfModalMaximize(event)" title="ফুল স্ক্রিন / স্বাভাবিক সাইজ">
                     <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"></path></svg>
                 </button>
@@ -2393,6 +2441,11 @@
                 <p>PDF লোড হচ্ছে, অনুগ্রহ করে অপেক্ষা করুন...</p>
             </div>
             <iframe id="pdf-modal-iframe" src="" allow="autoplay"></iframe>
+            <!-- Scroll Progress Indicator -->
+            <div class="pdf-scroll-track" id="pdf-scroll-track">
+                <div class="pdf-scroll-thumb" id="pdf-scroll-thumb" style="height:20%; top:0%"></div>
+            </div>
+            <div class="pdf-scroll-label" id="pdf-scroll-label">পৃষ্ঠা লোড হচ্ছে...</div>
         </div>
     </div>
 
@@ -6552,6 +6605,7 @@
         function init() {
             refreshPortalUI();
             initPdfWindowDragAndResize();
+            initPdfScrollIndicator();
 
             // Set up search and filters
             document.getElementById('search-bar').addEventListener('input', filterMeetings);
@@ -7260,7 +7314,94 @@
             }
         }
 
-        // Initialize Window Dragging & 8-Directional Resizing
+        // Print current PDF — opens native print dialog via the iframe
+        function printCurrentPdf(e) {
+            if (e) e.stopPropagation();
+            if (!currentOpenPdfUrl) return;
+
+            // Google Drive file → use /print endpoint directly
+            const match = currentOpenPdfUrl.match(/\/file\/d\/([a-zA-Z0-9_-]+)/);
+            if (match && match[1]) {
+                // Open print-ready view in a hidden window and trigger print
+                const printWin = window.open(
+                    `https://drive.google.com/file/d/${match[1]}/print`,
+                    '_blank',
+                    'width=900,height=700,scrollbars=yes,resizable=yes'
+                );
+                if (printWin) {
+                    printWin.focus();
+                    // Small delay to let page load, then print
+                    setTimeout(() => {
+                        try { printWin.print(); } catch(err) { /* user will use browser print */ }
+                    }, 1800);
+                }
+            } else {
+                // Fallback: open in new tab for user to print
+                window.open(currentOpenPdfUrl, '_blank');
+            }
+        }
+
+        // Scroll Indicator — tracks Google Drive iframe scroll via postMessage
+        let scrollLabelTimer = null;
+        function initPdfScrollIndicator() {
+            const iframe   = document.getElementById('pdf-modal-iframe');
+            const thumb    = document.getElementById('pdf-scroll-thumb');
+            const label    = document.getElementById('pdf-scroll-label');
+            if (!iframe || !thumb || !label) return;
+
+            // Reset indicator when PDF loads
+            iframe.addEventListener('load', () => {
+                thumb.style.top    = '0%';
+                thumb.style.height = '20%';
+                label.textContent  = 'PDF লোড হয়েছে — স্ক্রল করুন';
+                label.classList.add('visible');
+                clearTimeout(scrollLabelTimer);
+                scrollLabelTimer = setTimeout(() => label.classList.remove('visible'), 2500);
+            });
+
+            // Listen for scroll messages sent from Google Drive iframe (postMessage)
+            window.addEventListener('message', (event) => {
+                // Google Drive sends scroll data via message
+                if (!event.data || typeof event.data !== 'object') return;
+                const data = event.data;
+
+                // Handle Google Drive viewer scroll event format
+                if (data.type === 'scroll' || data.scrollTop !== undefined || data.pageNumber !== undefined) {
+                    let pct = 0;
+                    if (data.scrollTop !== undefined && data.scrollHeight !== undefined && data.clientHeight !== undefined) {
+                        const scrollable = data.scrollHeight - data.clientHeight;
+                        pct = scrollable > 0 ? Math.min(100, (data.scrollTop / scrollable) * 100) : 0;
+                    } else if (data.pageNumber !== undefined && data.totalPages !== undefined && data.totalPages > 0) {
+                        pct = Math.min(100, ((data.pageNumber - 1) / (data.totalPages - 1)) * 100);
+                        label.textContent = `পৃষ্ঠা ${data.pageNumber} / ${data.totalPages}`;
+                        label.classList.add('visible');
+                        clearTimeout(scrollLabelTimer);
+                        scrollLabelTimer = setTimeout(() => label.classList.remove('visible'), 2000);
+                    }
+                    const thumbH = Math.max(8, Math.min(40, 100 * (iframe.clientHeight / (iframe.contentDocument ? iframe.contentDocument.body.scrollHeight || iframe.clientHeight : iframe.clientHeight))));
+                    thumb.style.height = thumbH + '%';
+                    thumb.style.top    = (pct * (100 - thumbH) / 100) + '%';
+                }
+            });
+
+            // Fallback: animate thumb slowly downward on mousemove over the iframe body
+            // (since Google Drive cross-origin blocks direct scroll access)
+            const panel = document.getElementById('pdf-floating-panel');
+            if (panel) {
+                // Simulate scroll tracking via panel mousemove position
+                const body = panel.querySelector('.pdf-modal-body');
+                if (body) {
+                    body.addEventListener('mousemove', (e) => {
+                        const rect = body.getBoundingClientRect();
+                        const relY = e.clientY - rect.top;
+                        const pct = Math.max(0, Math.min(100, (relY / rect.height) * 100));
+                        thumb.style.top = Math.max(0, Math.min(80, pct * 0.8)) + '%';
+                    });
+                }
+            }
+        }
+
+
         function initPdfWindowDragAndResize() {
             const panel = document.getElementById('pdf-floating-panel');
             const header = document.getElementById('pdf-window-header');
