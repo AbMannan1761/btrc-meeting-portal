@@ -6141,6 +6141,13 @@
     ]
 };
 
+        let meetings = masterDb.meetings;
+        let coordinationMom = masterDb.coordination_mom || [];
+        let commissionerInstructions = masterDb.commissioner_instructions || [];
+        let activeMeetingIndex = null;
+        let activeAgendaIndex = null;
+        let viewMode = 'list';
+
         const gdriveMainFolderUrl = "https://drive.google.com/drive/folders/1mgWMNrL24N92irRgrd4WUL3hhYrfSsIj?usp=sharing";
         const meetingPdfDriveMap = {
   "10": "https://drive.google.com/file/d/1rCwH5DkSyLA5JMI9GLEC8Cy5AxbF5ylk/view?usp=sharing",
@@ -6223,6 +6230,17 @@
   "34": "https://drive.google.com/file/d/190ogpWrDNnzv4ObRRa1wJwExE1t5knpu/view?usp=sharing",
   "9": "https://drive.google.com/file/d/1eBxo-j3oUW-bpnsGb2i4MzQzsAH3egmv/view?usp=sharing"
 };
+
+        function getMeetingPdfUrl(meetingNumber) {
+            if (!meetingNumber) return gdriveMainFolderUrl;
+            let numStr = meetingNumber.toString().replace(/[০-৯]/g, d => banglaDigits[d]).replace(/\D/g, '');
+            if (numStr && meetingPdfDriveMap[numStr]) {
+                return meetingPdfDriveMap[numStr];
+            }
+            return gdriveMainFolderUrl;
+        }
+
+        
 
         function getMeetingPdfUrl(meetingNumber) {
             if (!meetingNumber) return gdriveMainFolderUrl;

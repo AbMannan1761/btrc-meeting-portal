@@ -97,6 +97,13 @@ if os.path.exists(pdf_map_path):
         pdf_map_str = pf.read().strip()
 
 pdf_inject_code = f"""
+        let meetings = masterDb.meetings;
+        let coordinationMom = masterDb.coordination_mom || [];
+        let commissionerInstructions = masterDb.commissioner_instructions || [];
+        let activeMeetingIndex = null;
+        let activeAgendaIndex = null;
+        let viewMode = 'list';
+
         const gdriveMainFolderUrl = "https://drive.google.com/drive/folders/1mgWMNrL24N92irRgrd4WUL3hhYrfSsIj?usp=sharing";
         const meetingPdfDriveMap = {pdf_map_str};
 
