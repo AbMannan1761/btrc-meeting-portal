@@ -6626,6 +6626,18 @@
             initPdfWindowDragAndResize();
             initPdfScrollIndicator();
 
+            // Force search panel to left side (override any cached CSS)
+            try {
+                const searchPanel = document.querySelector('.search-panel-container');
+                if (searchPanel && searchPanel.style && typeof searchPanel.style.setProperty === 'function') {
+                    searchPanel.style.setProperty('position', 'fixed', 'important');
+                    searchPanel.style.setProperty('left', '1.5rem', 'important');
+                    searchPanel.style.setProperty('top', '90px', 'important');
+                    searchPanel.style.setProperty('transform', 'none', 'important');
+                    searchPanel.style.setProperty('right', 'auto', 'important');
+                }
+            } catch(e) { /* safe fallback */ }
+
             // Set up search and filters
             document.getElementById('search-bar').addEventListener('input', filterMeetings);
             document.getElementById('filter-category').addEventListener('change', filterMeetings);
