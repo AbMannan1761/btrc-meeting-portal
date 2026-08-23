@@ -125,7 +125,7 @@ def meeting_sort_key(m):
     num_str = re.sub(r'\D', '', m["meeting_number"])
     return int(num_str) if num_str.isdigit() else 999
 
-sorted_meetings = sorted(list(meetings_dict.values()), key=meeting_sort_key)
+sorted_meetings = sorted(list(meetings_dict.values()), key=meeting_sort_key, reverse=True)
 
 coordination_mom = []
 commissioner_instructions = []
