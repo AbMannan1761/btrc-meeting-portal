@@ -6349,16 +6349,28 @@
                     });
                 }
 
-                const newMeetingsList = Object.values(newMeetingsDict);
-                if (newMeetingsList.length > 0) {
-                    newMeetingsList.sort((a, b) => {
+                if (Object.keys(newMeetingsDict).length > 0) {
+                    const meetingsMap = {};
+                    (masterDb.meetings || []).forEach(m => {
+                        if (m && m.meeting_number) {
+                            meetingsMap[m.meeting_number] = m;
+                        }
+                    });
+                    
+                    Object.keys(newMeetingsDict).forEach(mNo => {
+                        meetingsMap[mNo] = newMeetingsDict[mNo];
+                    });
+
+                    const mergedList = Object.values(meetingsMap);
+                    mergedList.sort((a, b) => {
                         const getNum = (m) => {
                             let numStr = (m.meeting_number || '').replace(/[০-৯]/g, d => banglaDigits[d]).replace(/\D/g, '');
                             return parseInt(numStr, 10) || 0;
                         };
                         return getNum(b) - getNum(a);
                     });
-                    masterDb.meetings = newMeetingsList;
+
+                    masterDb.meetings = mergedList;
                     meetings = masterDb.meetings;
                     refreshPortalUI();
                     filterMeetings();
