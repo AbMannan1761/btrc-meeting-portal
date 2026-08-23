@@ -1936,129 +1936,131 @@
         }
 
     
-        /* In-App Resizable Right-Side PDF Drawer (Default Portrait) */
-        .pdf-modal-overlay {
+        /* In-App Draggable & Resizable Floating PDF Panel (Default Right-Side Portrait) */
+        .pdf-floating-panel {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background: rgba(6, 30, 18, 0.45);
-            backdrop-filter: blur(4px);
             z-index: 10000;
-            display: flex;
-            justify-content: flex-end;
-            align-items: stretch;
-            transition: opacity 0.3s ease;
-        }
-
-        .pdf-modal-overlay.hidden {
-            display: none !important;
-        }
-
-        .pdf-modal-container.right-drawer {
-            position: relative;
-            width: 52vw;
-            min-width: 360px;
-            max-width: 95vw;
-            height: 100vh;
             background: #ffffff;
-            border-left: 1.5px solid rgba(14, 100, 55, 0.25);
-            box-shadow: -15px 0 45px rgba(0, 0, 0, 0.35);
+            border-radius: 12px;
+            border: 1.5px solid rgba(14, 100, 55, 0.35);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.2);
             display: flex;
             flex-direction: column;
             overflow: hidden;
-            animation: slideInRight 0.3s cubic-bezier(0.25, 1, 0.5, 1);
-            transition: width 0.25s ease;
+            min-width: 320px;
+            min-height: 250px;
+            box-sizing: border-box;
+            transition: box-shadow 0.2s ease;
         }
 
-        .pdf-modal-container.maximized {
-            width: 96vw !important;
-            max-width: 96vw !important;
+        .pdf-floating-panel.hidden {
+            display: none !important;
         }
 
-        /* Drag-to-Resize Handle on Left Border */
-        .pdf-resize-handle {
+        .pdf-floating-panel.dragging,
+        .pdf-floating-panel.resizing {
+            box-shadow: 0 25px 70px rgba(0, 0, 0, 0.5), 0 0 0 2px #0e6437;
+            user-select: none;
+        }
+
+        /* 8-Directional Resize Handles */
+        .win-resize-handle {
             position: absolute;
-            left: 0;
-            top: 0;
-            bottom: 0;
-            width: 12px;
-            cursor: ew-resize;
-            z-index: 30;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: transparent;
-            transition: background 0.2s ease;
+            z-index: 50;
+            box-sizing: border-box;
+        }
+        .win-resize-handle.top {
+            top: 0; left: 10px; right: 10px; height: 8px; cursor: ns-resize;
+        }
+        .win-resize-handle.bottom {
+            bottom: 0; left: 10px; right: 10px; height: 8px; cursor: ns-resize;
+        }
+        .win-resize-handle.left {
+            left: 0; top: 10px; bottom: 10px; width: 8px; cursor: ew-resize;
+        }
+        .win-resize-handle.right {
+            right: 0; top: 10px; bottom: 10px; width: 8px; cursor: ew-resize;
+        }
+        .win-resize-handle.top-left {
+            top: 0; left: 0; width: 14px; height: 14px; cursor: nwse-resize; z-index: 51;
+        }
+        .win-resize-handle.top-right {
+            top: 0; right: 0; width: 14px; height: 14px; cursor: nesw-resize; z-index: 51;
+        }
+        .win-resize-handle.bottom-left {
+            bottom: 0; left: 0; width: 14px; height: 14px; cursor: nesw-resize; z-index: 51;
+        }
+        .win-resize-handle.bottom-right {
+            bottom: 0; right: 0; width: 14px; height: 14px; cursor: nwse-resize; z-index: 51;
         }
 
-        .pdf-resize-handle:hover,
-        .pdf-resize-handle.dragging {
-            background: rgba(14, 100, 55, 0.25);
+        /* Visual Resize Grip Accent on Corners */
+        .win-resize-handle.bottom-right::after {
+            content: '';
+            position: absolute;
+            right: 4px;
+            bottom: 4px;
+            width: 8px;
+            height: 8px;
+            border-right: 2px solid rgba(14, 100, 55, 0.5);
+            border-bottom: 2px solid rgba(14, 100, 55, 0.5);
         }
 
-        .resize-grip {
-            width: 4px;
-            height: 44px;
-            background: rgba(14, 100, 55, 0.4);
-            border-radius: 4px;
-            transition: all 0.2s ease;
-        }
-
-        .pdf-resize-handle:hover .resize-grip,
-        .pdf-resize-handle.dragging .resize-grip {
-            background: #0e6437;
-            height: 70px;
-            width: 5px;
-        }
-
+        /* Draggable Titlebar */
         .pdf-modal-header {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 0.85rem 1.25rem 0.85rem 1.75rem;
+            padding: 0.75rem 1rem;
             background: #0e6437;
             color: #ffffff;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            cursor: grab;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+            user-select: none;
+        }
+
+        .pdf-modal-header:active {
+            cursor: grabbing;
         }
 
         .pdf-modal-title {
             display: flex;
             align-items: center;
-            gap: 0.65rem;
-            font-size: 1rem;
+            gap: 0.6rem;
+            font-size: 0.95rem;
             font-weight: 600;
             font-family: 'Nikosh', 'Noto Sans Bengali', sans-serif;
             letter-spacing: 0.2px;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+            pointer-events: none;
         }
 
         .pdf-modal-actions {
             display: flex;
             align-items: center;
-            gap: 0.4rem;
+            gap: 0.35rem;
             flex-shrink: 0;
+            cursor: default;
         }
 
         .pdf-action-btn {
-            background: rgba(255, 255, 255, 0.15);
+            background: rgba(255, 255, 255, 0.18);
             border: 1px solid rgba(255, 255, 255, 0.25);
             color: #ffffff;
-            width: 32px;
-            height: 32px;
-            border-radius: 7px;
+            width: 30px;
+            height: 30px;
+            border-radius: 6px;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: all 0.15s ease;
         }
 
         .pdf-action-btn:hover {
-            background: rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.35);
             transform: scale(1.05);
         }
 
@@ -2067,17 +2069,20 @@
             border-color: #ef4444;
         }
 
+        /* Body & Iframe */
         .pdf-modal-body {
             flex: 1;
             position: relative;
-            background: #1a202c;
+            background: #1e293b;
             overflow: hidden;
+            min-height: 200px;
         }
 
         .pdf-modal-body iframe {
             width: 100%;
             height: 100%;
             border: none;
+            display: block;
         }
 
         .pdf-loading-spinner {
@@ -2092,29 +2097,20 @@
             justify-content: center;
             background: #ffffff;
             color: #0e6437;
-            gap: 1rem;
+            gap: 0.75rem;
             font-family: 'Nikosh', 'Noto Sans Bengali', sans-serif;
-            font-size: 1.05rem;
+            font-size: 1rem;
             font-weight: 500;
             z-index: 5;
         }
 
         .pdf-loading-spinner .spinner {
-            width: 40px;
-            height: 40px;
+            width: 36px;
+            height: 36px;
             border: 3.5px solid rgba(14, 100, 55, 0.15);
             border-top-color: #0e6437;
             border-radius: 50%;
             animation: spin 0.8s linear infinite;
-        }
-
-        @keyframes slideInRight {
-            from {
-                transform: translateX(100%);
-            }
-            to {
-                transform: translateX(0);
-            }
         }</style>
 </head>
 <body>
@@ -2354,39 +2350,44 @@
     </div>
 
     
-    <!-- In-App Resizable Right-Side PDF Drawer Overlay -->
-    <div id="pdf-modal-overlay" class="pdf-modal-overlay hidden" onclick="handlePdfOverlayClick(event)">
-        <div class="pdf-modal-container right-drawer" id="pdf-drawer-container" onclick="event.stopPropagation()">
-            <!-- Left border drag handle to resize width -->
-            <div class="pdf-resize-handle" id="pdf-resize-handle" title="টেনে ডানে-বামে ছোট বা বড় করুন">
-                <div class="resize-grip"></div>
+    <!-- In-App Draggable & Resizable Floating PDF Panel -->
+    <div id="pdf-floating-panel" class="pdf-floating-panel hidden">
+        <!-- 8-Directional Resize Handles -->
+        <div class="win-resize-handle top" data-direction="top"></div>
+        <div class="win-resize-handle bottom" data-direction="bottom"></div>
+        <div class="win-resize-handle left" data-direction="left"></div>
+        <div class="win-resize-handle right" data-direction="right"></div>
+        <div class="win-resize-handle top-left" data-direction="top-left"></div>
+        <div class="win-resize-handle top-right" data-direction="top-right"></div>
+        <div class="win-resize-handle bottom-left" data-direction="bottom-left"></div>
+        <div class="win-resize-handle bottom-right" data-direction="bottom-right"></div>
+
+        <!-- Draggable Titlebar -->
+        <div class="pdf-modal-header" id="pdf-window-header" title="মাউস চেপে ধরে ড্র্যাগ করে যেকোনো জায়গায় সরান">
+            <div class="pdf-modal-title">
+                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                <span id="pdf-modal-heading">কমিশন সভার মূল কার্যবিবরণী (PDF)</span>
             </div>
-            
-            <div class="pdf-modal-header">
-                <div class="pdf-modal-title">
-                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
-                    <span id="pdf-modal-heading">কমিশন সভার মূল কার্যবিবরণী (PDF)</span>
-                </div>
-                <div class="pdf-modal-actions">
-                    <button class="pdf-action-btn" id="pdf-maximize-btn" onclick="togglePdfModalMaximize()" title="ফুল স্ক্রিন / স্বাভাবিক সাইজ">
-                        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"></path></svg>
-                    </button>
-                    <button class="pdf-action-btn" id="pdf-newtab-btn" onclick="openCurrentPdfNewTab()" title="আলাদা ট্যাবে খুলুন">
-                        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
-                    </button>
-                    <button class="pdf-action-btn close-btn" onclick="closePdfModal()" title="বন্ধ করুন (Esc)">
-                        <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-                    </button>
-                </div>
+            <div class="pdf-modal-actions">
+                <button class="pdf-action-btn" id="pdf-maximize-btn" onclick="togglePdfModalMaximize(event)" title="ফুল স্ক্রিন / স্বাভাবিক সাইজ">
+                    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"></path></svg>
+                </button>
+                <button class="pdf-action-btn" id="pdf-newtab-btn" onclick="openCurrentPdfNewTab(event)" title="আলাদা ট্যাবে খুলুন">
+                    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+                </button>
+                <button class="pdf-action-btn close-btn" onclick="closePdfModal(event)" title="বন্ধ করুন (Esc)">
+                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                </button>
             </div>
-            
-            <div class="pdf-modal-body">
-                <div id="pdf-loading-spinner" class="pdf-loading-spinner">
-                    <div class="spinner"></div>
-                    <p>PDF লোড হচ্ছে, অনুগ্রহ করে অপেক্ষা করুন...</p>
-                </div>
-                <iframe id="pdf-modal-iframe" src="" allow="autoplay"></iframe>
+        </div>
+        
+        <!-- Iframe Body -->
+        <div class="pdf-modal-body">
+            <div id="pdf-loading-spinner" class="pdf-loading-spinner">
+                <div class="spinner"></div>
+                <p>PDF লোড হচ্ছে, অনুগ্রহ করে অপেক্ষা করুন...</p>
             </div>
+            <iframe id="pdf-modal-iframe" src="" allow="autoplay"></iframe>
         </div>
     </div>
 
@@ -6545,7 +6546,7 @@
 
         function init() {
             refreshPortalUI();
-            initPdfDrawerResize();
+            initPdfWindowDragAndResize();
 
             // Set up search and filters
             document.getElementById('search-bar').addEventListener('input', filterMeetings);
@@ -7143,6 +7144,8 @@
         }
 
         let currentOpenPdfUrl = '';
+        let isMaximized = false;
+        let prevPanelRect = null;
 
         function openPdfModal(meetingNumber) {
             const rawUrl = getMeetingPdfUrl(meetingNumber);
@@ -7160,20 +7163,31 @@
                 return;
             }
 
-            const modal = document.getElementById('pdf-modal-overlay');
+            const panel = document.getElementById('pdf-floating-panel');
             const iframe = document.getElementById('pdf-modal-iframe');
             const spinner = document.getElementById('pdf-loading-spinner');
             const heading = document.getElementById('pdf-modal-heading');
-            const drawer = document.getElementById('pdf-drawer-container');
             
             if (heading) {
                 heading.innerText = `${meetingNumber || ''} কমিশন সভার মূল কার্যবিবরণী (PDF)`;
             }
 
-            // Reset width to default portrait drawer width
-            if (drawer) {
-                drawer.classList.remove('maximized');
-                drawer.style.width = '52vw';
+            // Set Default Portrait Position on the Right Side
+            if (panel) {
+                const winWidth = window.innerWidth;
+                const winHeight = window.innerHeight;
+                const defWidth = Math.min(Math.max(winWidth * 0.46, 460), 720);
+                const defHeight = Math.min(winHeight * 0.88, 860);
+                const defTop = Math.max(30, (winHeight - defHeight) / 2);
+                const defLeft = Math.max(20, winWidth - defWidth - 30);
+
+                panel.style.width = defWidth + 'px';
+                panel.style.height = defHeight + 'px';
+                panel.style.top = defTop + 'px';
+                panel.style.left = defLeft + 'px';
+                panel.style.right = 'auto';
+                panel.style.bottom = 'auto';
+                isMaximized = false;
             }
 
             if (spinner) spinner.style.display = 'flex';
@@ -7186,82 +7200,166 @@
                 };
             }
 
-            if (modal) {
-                modal.classList.remove('hidden');
+            if (panel) {
+                panel.classList.remove('hidden');
             }
         }
 
-        function closePdfModal() {
-            const modal = document.getElementById('pdf-modal-overlay');
+        function closePdfModal(e) {
+            if (e) e.stopPropagation();
+            const panel = document.getElementById('pdf-floating-panel');
             const iframe = document.getElementById('pdf-modal-iframe');
-            if (modal) {
-                modal.classList.add('hidden');
+            if (panel) {
+                panel.classList.add('hidden');
             }
             if (iframe) {
                 iframe.src = '';
             }
         }
 
-        function handlePdfOverlayClick(event) {
-            if (event.target && event.target.id === 'pdf-modal-overlay') {
-                closePdfModal();
-            }
-        }
+        function togglePdfModalMaximize(e) {
+            if (e) e.stopPropagation();
+            const panel = document.getElementById('pdf-floating-panel');
+            if (!panel) return;
 
-        function togglePdfModalMaximize() {
-            const drawer = document.getElementById('pdf-drawer-container');
-            if (drawer) {
-                if (drawer.classList.contains('maximized')) {
-                    drawer.classList.remove('maximized');
-                    drawer.style.width = '52vw';
-                } else {
-                    drawer.classList.add('maximized');
-                    drawer.style.width = '96vw';
+            if (isMaximized) {
+                // Restore to previous position
+                if (prevPanelRect) {
+                    panel.style.left = prevPanelRect.left + 'px';
+                    panel.style.top = prevPanelRect.top + 'px';
+                    panel.style.width = prevPanelRect.width + 'px';
+                    panel.style.height = prevPanelRect.height + 'px';
                 }
+                isMaximized = false;
+            } else {
+                // Save current position and maximize
+                prevPanelRect = {
+                    left: panel.offsetLeft,
+                    top: panel.offsetTop,
+                    width: panel.offsetWidth,
+                    height: panel.offsetHeight
+                };
+                panel.style.left = '16px';
+                panel.style.top = '16px';
+                panel.style.width = (window.innerWidth - 32) + 'px';
+                panel.style.height = (window.innerHeight - 32) + 'px';
+                isMaximized = true;
             }
         }
 
-        function openCurrentPdfNewTab() {
+        function openCurrentPdfNewTab(e) {
+            if (e) e.stopPropagation();
             if (currentOpenPdfUrl) {
                 window.open(currentOpenPdfUrl, '_blank');
             }
         }
 
-        // Drag to resize PDF Drawer logic
-        function initPdfDrawerResize() {
-            const handle = document.getElementById('pdf-resize-handle');
-            const drawer = document.getElementById('pdf-drawer-container');
-            if (!handle || !drawer) return;
+        // Initialize Window Dragging & 8-Directional Resizing
+        function initPdfWindowDragAndResize() {
+            const panel = document.getElementById('pdf-floating-panel');
+            const header = document.getElementById('pdf-window-header');
+            const iframe = document.getElementById('pdf-modal-iframe');
+            if (!panel || !header) return;
 
             let isDragging = false;
+            let dragStartX = 0, dragStartY = 0;
+            let initLeft = 0, initTop = 0;
 
-            handle.addEventListener('mousedown', (e) => {
+            // 1. Move/Drag Panel via Titlebar
+            header.addEventListener('mousedown', (e) => {
+                if (e.target.closest('.pdf-action-btn')) return;
                 isDragging = true;
-                handle.classList.add('dragging');
-                document.body.style.userSelect = 'none';
-                document.body.style.cursor = 'ew-resize';
-                
-                const iframe = document.getElementById('pdf-modal-iframe');
+                panel.classList.add('dragging');
+                dragStartX = e.clientX;
+                dragStartY = e.clientY;
+                initLeft = panel.offsetLeft;
+                initTop = panel.offsetTop;
                 if (iframe) iframe.style.pointerEvents = 'none';
+                document.body.style.userSelect = 'none';
                 e.preventDefault();
             });
 
-            document.addEventListener('mousemove', (e) => {
-                if (!isDragging) return;
-                const newWidth = window.innerWidth - e.clientX;
-                if (newWidth >= 320 && newWidth <= window.innerWidth * 0.96) {
-                    drawer.style.width = newWidth + 'px';
+            // 2. Multi-Directional Resizing
+            let isResizing = false;
+            let currentHandle = null;
+            let resizeStartX = 0, resizeStartY = 0;
+            let initW = 0, initH = 0, initL = 0, initT = 0;
+
+            const handles = panel.querySelectorAll('.win-resize-handle');
+            handles.forEach(handle => {
+                handle.addEventListener('mousedown', (e) => {
+                    isResizing = true;
+                    currentHandle = handle.getAttribute('data-direction');
+                    panel.classList.add('resizing');
+                    resizeStartX = e.clientX;
+                    resizeStartY = e.clientY;
+                    initW = panel.offsetWidth;
+                    initH = panel.offsetHeight;
+                    initL = panel.offsetLeft;
+                    initT = panel.offsetTop;
+                    if (iframe) iframe.style.pointerEvents = 'none';
+                    document.body.style.userSelect = 'none';
+                    e.preventDefault();
+                    e.stopPropagation();
+                });
+            });
+
+            // Window-wide MouseMove Listener
+            window.addEventListener('mousemove', (e) => {
+                if (isDragging) {
+                    const dx = e.clientX - dragStartX;
+                    const dy = e.clientY - dragStartY;
+                    let newL = initLeft + dx;
+                    let newT = initTop + dy;
+
+                    // Bounds constrain
+                    newL = Math.max(0, Math.min(window.innerWidth - 80, newL));
+                    newT = Math.max(0, Math.min(window.innerHeight - 50, newT));
+
+                    panel.style.left = newL + 'px';
+                    panel.style.top = newT + 'px';
+                    panel.style.right = 'auto';
+                    panel.style.bottom = 'auto';
+                } else if (isResizing && currentHandle) {
+                    const dx = e.clientX - resizeStartX;
+                    const dy = e.clientY - resizeStartY;
+                    const minW = 320, minH = 220;
+
+                    if (currentHandle.includes('right')) {
+                        const newW = Math.max(minW, initW + dx);
+                        panel.style.width = newW + 'px';
+                    }
+                    if (currentHandle.includes('left')) {
+                        const newW = Math.max(minW, initW - dx);
+                        if (newW > minW) {
+                            panel.style.width = newW + 'px';
+                            panel.style.left = (initL + dx) + 'px';
+                        }
+                    }
+                    if (currentHandle.includes('bottom')) {
+                        const newH = Math.max(minH, initH + dy);
+                        panel.style.height = newH + 'px';
+                    }
+                    if (currentHandle.includes('top')) {
+                        const newH = Math.max(minH, initH - dy);
+                        if (newH > minH) {
+                            panel.style.height = newH + 'px';
+                            panel.style.top = (initT + dy) + 'px';
+                        }
+                    }
                 }
             });
 
-            document.addEventListener('mouseup', () => {
-                if (isDragging) {
+            // Window-wide MouseUp Listener
+            window.addEventListener('mouseup', () => {
+                if (isDragging || isResizing) {
                     isDragging = false;
-                    handle.classList.remove('dragging');
-                    document.body.style.userSelect = '';
-                    document.body.style.cursor = '';
-                    const iframe = document.getElementById('pdf-modal-iframe');
+                    isResizing = false;
+                    currentHandle = null;
+                    panel.classList.remove('dragging');
+                    panel.classList.remove('resizing');
                     if (iframe) iframe.style.pointerEvents = 'auto';
+                    document.body.style.userSelect = '';
                 }
             });
         }
