@@ -7156,12 +7156,12 @@
             const rawUrl = getMeetingPdfUrl(meetingNumber);
             currentOpenPdfUrl = rawUrl;
             
-            // Convert /view to /preview for clean embedded iframe framing
+            // Convert /view to /preview with #view=FitH for clean auto-fit and centered document
             let previewUrl = rawUrl;
             if (rawUrl.includes('/file/d/')) {
                 const match = rawUrl.match(/\/file\/d\/([a-zA-Z0-9_-]+)/);
                 if (match && match[1]) {
-                    previewUrl = `https://drive.google.com/file/d/${match[1]}/preview`;
+                    previewUrl = `https://drive.google.com/file/d/${match[1]}/preview#view=FitH`;
                 }
             } else if (rawUrl.includes('/folders/')) {
                 window.open(rawUrl, '_blank');
@@ -7177,14 +7177,14 @@
                 heading.innerText = `${meetingNumber || ''} কমিশন সভার মূল কার্যবিবরণী (PDF)`;
             }
 
-            // Set Default Portrait Position on the Right Side
+            // Set Default Portrait Position on the Right Side (Auto-fit A4 aspect ratio)
             if (panel) {
                 const winWidth = window.innerWidth;
                 const winHeight = window.innerHeight;
-                const defWidth = Math.min(Math.max(winWidth * 0.46, 460), 720);
-                const defHeight = Math.min(winHeight * 0.88, 860);
-                const defTop = Math.max(30, (winHeight - defHeight) / 2);
-                const defLeft = Math.max(20, winWidth - defWidth - 30);
+                const defWidth = Math.min(Math.max(winWidth * 0.54, 580), 850);
+                const defHeight = Math.min(winHeight * 0.90, 920);
+                const defTop = Math.max(20, (winHeight - defHeight) / 2);
+                const defLeft = Math.max(15, winWidth - defWidth - 25);
 
                 panel.style.width = defWidth + 'px';
                 panel.style.height = defHeight + 'px';
