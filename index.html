@@ -1942,12 +1942,12 @@
             z-index: 10000;
             background: #ffffff;
             border-radius: 12px;
-            border: 1.5px solid rgba(14, 100, 55, 0.35);
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.2);
+            border: 2px solid #0e6437;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.45), 0 0 0 1px rgba(255, 255, 255, 0.2);
             display: flex;
             flex-direction: column;
-            overflow: hidden;
-            min-width: 320px;
+            overflow: visible; /* allows resize handles on border perimeter */
+            min-width: 340px;
             min-height: 250px;
             box-sizing: border-box;
             transition: box-shadow 0.2s ease;
@@ -1959,51 +1959,51 @@
 
         .pdf-floating-panel.dragging,
         .pdf-floating-panel.resizing {
-            box-shadow: 0 25px 70px rgba(0, 0, 0, 0.5), 0 0 0 2px #0e6437;
+            box-shadow: 0 25px 70px rgba(0, 0, 0, 0.55), 0 0 0 3px #10b981;
             user-select: none;
         }
 
-        /* 8-Directional Resize Handles */
+        /* 8-Directional Perimeter Resize Handles - positioned on the outer border so they NEVER block internal scrollbars */
         .win-resize-handle {
             position: absolute;
             z-index: 50;
             box-sizing: border-box;
         }
         .win-resize-handle.top {
-            top: 0; left: 10px; right: 10px; height: 8px; cursor: ns-resize;
+            top: -5px; left: 14px; right: 14px; height: 10px; cursor: ns-resize;
         }
         .win-resize-handle.bottom {
-            bottom: 0; left: 10px; right: 10px; height: 8px; cursor: ns-resize;
+            bottom: -5px; left: 14px; right: 14px; height: 10px; cursor: ns-resize;
         }
         .win-resize-handle.left {
-            left: 0; top: 10px; bottom: 10px; width: 8px; cursor: ew-resize;
+            left: -5px; top: 14px; bottom: 14px; width: 10px; cursor: ew-resize;
         }
         .win-resize-handle.right {
-            right: 0; top: 10px; bottom: 10px; width: 8px; cursor: ew-resize;
+            right: -5px; top: 14px; bottom: 14px; width: 10px; cursor: ew-resize;
         }
         .win-resize-handle.top-left {
-            top: 0; left: 0; width: 14px; height: 14px; cursor: nwse-resize; z-index: 51;
+            top: -8px; left: -8px; width: 18px; height: 18px; cursor: nwse-resize; z-index: 55;
         }
         .win-resize-handle.top-right {
-            top: 0; right: 0; width: 14px; height: 14px; cursor: nesw-resize; z-index: 51;
+            top: -8px; right: -8px; width: 18px; height: 18px; cursor: nesw-resize; z-index: 55;
         }
         .win-resize-handle.bottom-left {
-            bottom: 0; left: 0; width: 14px; height: 14px; cursor: nesw-resize; z-index: 51;
+            bottom: -8px; left: -8px; width: 18px; height: 18px; cursor: nesw-resize; z-index: 55;
         }
         .win-resize-handle.bottom-right {
-            bottom: 0; right: 0; width: 14px; height: 14px; cursor: nwse-resize; z-index: 51;
+            bottom: -8px; right: -8px; width: 18px; height: 18px; cursor: nwse-resize; z-index: 55;
         }
 
-        /* Visual Resize Grip Accent on Corners */
+        /* Visual Grip Accent on bottom-right corner */
         .win-resize-handle.bottom-right::after {
             content: '';
             position: absolute;
-            right: 4px;
-            bottom: 4px;
-            width: 8px;
-            height: 8px;
-            border-right: 2px solid rgba(14, 100, 55, 0.5);
-            border-bottom: 2px solid rgba(14, 100, 55, 0.5);
+            right: 5px;
+            bottom: 5px;
+            width: 9px;
+            height: 9px;
+            border-right: 2.5px solid #0e6437;
+            border-bottom: 2.5px solid #0e6437;
         }
 
         /* Draggable Titlebar */
@@ -2015,8 +2015,11 @@
             background: #0e6437;
             color: #ffffff;
             cursor: grab;
+            border-radius: 10px 10px 0 0;
             border-bottom: 1px solid rgba(255, 255, 255, 0.15);
             user-select: none;
+            position: relative;
+            z-index: 10;
         }
 
         .pdf-modal-header:active {
@@ -2069,13 +2072,15 @@
             border-color: #ef4444;
         }
 
-        /* Body & Iframe */
+        /* Body & Iframe with complete unobstructed scroll track */
         .pdf-modal-body {
             flex: 1;
             position: relative;
             background: #1e293b;
+            border-radius: 0 0 10px 10px;
             overflow: hidden;
             min-height: 200px;
+            box-shadow: inset -1px 0 0 rgba(255, 255, 255, 0.1);
         }
 
         .pdf-modal-body iframe {
