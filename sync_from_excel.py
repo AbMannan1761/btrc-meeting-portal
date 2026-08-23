@@ -90,12 +90,32 @@ with open(html_path, 'r', encoding='utf-8') as f:
 
 json_str = json.dumps(master_db_object, ensure_ascii=False, indent=4)
 
+pdf_map_path = os.path.join(BASE_DIR, 'meeting_drive_pdf_map.json')
+pdf_map_str = "{}"
+if os.path.exists(pdf_map_path):
+    with open(pdf_map_path, 'r', encoding='utf-8') as pf:
+        pdf_map_str = pf.read().strip()
+
+pdf_inject_code = f"""
+        const gdriveMainFolderUrl = "https://drive.google.com/drive/folders/1mgWMNrL24N92irRgrd4WUL3hhYrfSsIj?usp=sharing";
+        const meetingPdfDriveMap = {pdf_map_str};
+
+        function getMeetingPdfUrl(meetingNumber) {{
+            if (!meetingNumber) return gdriveMainFolderUrl;
+            let numStr = meetingNumber.toString().replace(/[০-৯]/g, d => banglaDigits[d]).replace(/\\D/g, '');
+            if (numStr && meetingPdfDriveMap[numStr]) {{
+                return meetingPdfDriveMap[numStr];
+            }}
+            return gdriveMainFolderUrl;
+        }}
+"""
+
 start_idx = html.find('const masterDb = {')
 end_idx = html.find('const banglaDigits =', start_idx)
 substring = html[start_idx:end_idx]
 last_brace_idx = substring.rfind('};')
 
-new_text = f'const masterDb = {json_str};'
+new_text = f'const masterDb = {json_str};\n{pdf_inject_code}\n        '
 new_html = html[:start_idx] + new_text + html[start_idx + last_brace_idx + 2:]
 
 with open(html_path, 'w', encoding='utf-8') as f:
