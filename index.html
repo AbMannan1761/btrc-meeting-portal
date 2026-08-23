@@ -6233,23 +6233,11 @@
             return gdriveMainFolderUrl;
         }
 
-        
-
-        function getMeetingPdfUrl(meetingNumber) {
-            if (!meetingNumber) return gdriveMainFolderUrl;
-            let numStr = meetingNumber.toString().replace(/[০-৯]/g, d => banglaDigits[d]).replace(/\D/g, '');
-            if (numStr && meetingPdfDriveMap[numStr]) {
-                return meetingPdfDriveMap[numStr];
-            }
-            return gdriveMainFolderUrl;
-        }
-
         const banglaDigits = {'০':'0','১':'1','২':'2','৩':'3','৪':'4','৫':'5','৬':'6','৭':'7','৮':'8','৯':'9'};
         const englishDigits = {'0':'০','1':'১','2':'২','3':'৩','4':'৪','5':'৫','6':'৬','7':'৭','8':'৮','9':'৯'};
 
         function bdToEn(str) {
             if (!str) return 0;
-            // Clean non-digits except commas/periods and convert Bangla
             let cleaned = str.toString().replace(/[০-৯]/g, d => banglaDigits[d]);
             cleaned = cleaned.replace(/,/g, '');
             const val = parseFloat(cleaned);
@@ -6262,8 +6250,53 @@
             return str.replace(/[0-9]/g, d => englishDigits[d]);
         }
 
-        // Initialize and compute stats
-        
+        function refreshPortalUI() {
+            // Compute total stats
+            const statMeetingsEl = document.getElementById('stat-meetings-count');
+            if (statMeetingsEl) statMeetingsEl.innerText = enToBd(meetings.length) + 'টি';
+            
+            let totalAgendas = 0;
+            let totalFines = 0;
+            let totalClaims = 0;
+
+            meetings.forEach(m => {
+                totalAgendas += m.agendas.length;
+                m.agendas.forEach(a => {
+                    if (a.fine_amount) {
+                        totalFines += bdToEn(a.fine_amount);
+                    }
+                    if (a.revenue_sharing_claim) {
+                        totalClaims += bdToEn(a.revenue_sharing_claim);
+                    }
+                });
+            });
+
+            const statAgendasEl = document.getElementById('stat-agendas-count');
+            if (statAgendasEl) statAgendasEl.innerText = enToBd(totalAgendas) + 'টি';
+            
+            // Format fines in Crore/Lakh
+            const statFinesEl = document.getElementById('stat-fines-count');
+            if (statFinesEl) {
+                if (totalFines >= 10000000) {
+                    statFinesEl.innerText = enToBd(parseFloat((totalFines / 10000000).toFixed(2))) + ' কোটি';
+                } else if (totalFines >= 100000) {
+                    statFinesEl.innerText = enToBd(parseFloat((totalFines / 100000).toFixed(2))) + ' লাখ';
+                } else {
+                    statFinesEl.innerText = enToBd(totalFines) + ' টাকা';
+                }
+            }
+
+            // Format claims in Crore
+            const statClaimsEl = document.getElementById('stat-claims-count');
+            if (statClaimsEl) statClaimsEl.innerText = enToBd(parseFloat((totalClaims / 10000000).toFixed(2))) + ' কোটি';
+
+            // Render Layer 1 list view by default
+            setViewMode('list');
+            
+            // Render Tab 2 directives and coordination minutes
+            renderDirectivesTab();
+        }
+
         function init() {
             refreshPortalUI();
 
@@ -6607,7 +6640,7 @@
                                 <span class="header-subject-preview">${subjectPreview}</span>
                             </div>
                             <div class="header-right-info">
-                                ${a.fine_amount ? `<span class="header-fine-badge">জরিমানা: ${enToBd(bdToEn(a.fine_amount))} টাকা</span>` : ''}
+                                ${(a.fine_amount && bdToEn(a.fine_amount) > 0) ? `<span class="header-fine-badge">জরিমানা: ${enToBd(bdToEn(a.fine_amount))} টাকা</span>` : ''}
                                 <span class="toggle-arrow">▼</span>
                             </div>
                         </div>
