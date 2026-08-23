@@ -1411,6 +1411,11 @@
                 gap: 0.5rem;
                 padding: 0.75rem 0.5rem;
             }
+            .header-left-col {
+                flex-direction: column;
+                align-items: center;
+                gap: 0.5rem;
+            }
             .header-title-container {
                 flex-direction: column;
                 gap: 0.35rem;
@@ -1950,16 +1955,16 @@
 
         .header-left-col {
             display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-            gap: 0.4rem;
+            flex-direction: row;
+            align-items: center;
+            gap: 2.5rem;
         }
 
         .central-dashboard-btn-top {
             display: inline-flex;
             align-items: center;
             gap: 0.45rem;
-            padding: 0.28rem 0.85rem;
+            padding: 0.35rem 0.95rem;
             background: rgba(14, 100, 55, 0.08);
             border: 1.5px solid rgba(14, 100, 55, 0.25);
             border-radius: 20px;
@@ -1970,6 +1975,7 @@
             transition: all 0.25s ease;
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
             font-family: 'Nikosh', 'Noto Sans Bengali', sans-serif;
+            flex-shrink: 0;
         }
 
         .central-dashboard-btn-top:hover {
@@ -1994,7 +2000,7 @@
             align-items: center !important;
             justify-content: flex-start !important;
             gap: 1.25rem !important;
-            margin: 0.2rem 0 0 4.5rem !important;
+            margin: 0 !important;
         }
 
     
