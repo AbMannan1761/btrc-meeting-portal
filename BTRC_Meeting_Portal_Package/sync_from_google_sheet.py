@@ -72,13 +72,14 @@ def find_col(df, keywords):
                 return col
     return None
 
-m_no_col = find_col(df, ['মিটিং নম্বর', 'কমিশন সভা', 'Meeting No'])
-m_date_col = find_col(df, ['তারিখ', 'Date'])
-a_no_col = find_col(df, ['এজেন্ডা নম্বর', 'এজেন্ডা নং', 'Agenda'])
-subj_col = find_col(df, ['বিষয়', 'Subject'])
-dec_col = find_col(df, ['সিদ্ধান্ত', 'Decision'])
-fine_col = find_col(df, ['জরিমানা', 'Fine'])
-impl_col = find_col(df, ['বাস্তবায়ন', 'দপ্তর', 'বিভাগ', 'Implementation'])
+m_no_col = find_col(df, ['মিটিং নম্বর', 'কমিশন সভা', 'Meeting No']) or (df.columns[0] if len(df.columns) > 0 else None)
+m_date_col = find_col(df, ['তারিখ', 'Date']) or (df.columns[1] if len(df.columns) > 1 else None)
+a_no_col = find_col(df, ['এজেন্ডা নম্বর', 'এজেন্ডা নং', 'Agenda']) or (df.columns[2] if len(df.columns) > 2 else None)
+subj_col = find_col(df, ['বিষয়', 'Subject']) or (df.columns[3] if len(df.columns) > 3 else None)
+dec_col = find_col(df, ['সিদ্ধান্ত', 'Decision']) or (df.columns[4] if len(df.columns) > 4 else None)
+fine_col = find_col(df, ['জরিমানা', 'Fine']) or (df.columns[5] if len(df.columns) > 5 else None)
+# Column G (Index 6) is strictly for Implementation Department
+impl_col = find_col(df, ['বাস্তবায়ন', 'দপ্তর', 'বিভাগ', 'Implementation']) or (df.columns[6] if len(df.columns) > 6 else None)
 status_col = find_col(df, ['অবস্থা', 'স্ট্যাটাস', 'Status'])
 
 meetings_dict = {}
