@@ -1936,55 +1936,88 @@
         }
 
     
-        /* In-App PDF Preview Modal */
+        /* In-App Resizable Right-Side PDF Drawer (Default Portrait) */
         .pdf-modal-overlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100vw;
             height: 100vh;
-            background: rgba(6, 30, 18, 0.7);
-            backdrop-filter: blur(8px);
+            background: rgba(6, 30, 18, 0.45);
+            backdrop-filter: blur(4px);
             z-index: 10000;
             display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 1.5rem;
-            animation: fadeIn 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-            transition: all 0.3s ease;
+            justify-content: flex-end;
+            align-items: stretch;
+            transition: opacity 0.3s ease;
         }
 
         .pdf-modal-overlay.hidden {
             display: none !important;
         }
 
-        .pdf-modal-container {
-            width: 90vw;
-            max-width: 1200px;
-            height: 90vh;
+        .pdf-modal-container.right-drawer {
+            position: relative;
+            width: 52vw;
+            min-width: 360px;
+            max-width: 95vw;
+            height: 100vh;
             background: #ffffff;
-            border-radius: 16px;
-            border: 1px solid rgba(14, 100, 55, 0.2);
-            box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.1);
+            border-left: 1.5px solid rgba(14, 100, 55, 0.25);
+            box-shadow: -15px 0 45px rgba(0, 0, 0, 0.35);
             display: flex;
             flex-direction: column;
             overflow: hidden;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            animation: zoomIn 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            animation: slideInRight 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+            transition: width 0.25s ease;
         }
 
         .pdf-modal-container.maximized {
-            width: 98vw;
-            max-width: 98vw;
-            height: 96vh;
-            border-radius: 10px;
+            width: 96vw !important;
+            max-width: 96vw !important;
+        }
+
+        /* Drag-to-Resize Handle on Left Border */
+        .pdf-resize-handle {
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 12px;
+            cursor: ew-resize;
+            z-index: 30;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: transparent;
+            transition: background 0.2s ease;
+        }
+
+        .pdf-resize-handle:hover,
+        .pdf-resize-handle.dragging {
+            background: rgba(14, 100, 55, 0.25);
+        }
+
+        .resize-grip {
+            width: 4px;
+            height: 44px;
+            background: rgba(14, 100, 55, 0.4);
+            border-radius: 4px;
+            transition: all 0.2s ease;
+        }
+
+        .pdf-resize-handle:hover .resize-grip,
+        .pdf-resize-handle.dragging .resize-grip {
+            background: #0e6437;
+            height: 70px;
+            width: 5px;
         }
 
         .pdf-modal-header {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 0.85rem 1.5rem;
+            padding: 0.85rem 1.25rem 0.85rem 1.75rem;
             background: #0e6437;
             color: #ffffff;
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
@@ -1993,26 +2026,30 @@
         .pdf-modal-title {
             display: flex;
             align-items: center;
-            gap: 0.75rem;
-            font-size: 1.05rem;
+            gap: 0.65rem;
+            font-size: 1rem;
             font-weight: 600;
             font-family: 'Nikosh', 'Noto Sans Bengali', sans-serif;
             letter-spacing: 0.2px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .pdf-modal-actions {
             display: flex;
             align-items: center;
-            gap: 0.5rem;
+            gap: 0.4rem;
+            flex-shrink: 0;
         }
 
         .pdf-action-btn {
             background: rgba(255, 255, 255, 0.15);
             border: 1px solid rgba(255, 255, 255, 0.25);
             color: #ffffff;
-            width: 34px;
-            height: 34px;
-            border-radius: 8px;
+            width: 32px;
+            height: 32px;
+            border-radius: 7px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -2063,26 +2100,22 @@
         }
 
         .pdf-loading-spinner .spinner {
-            width: 44px;
-            height: 44px;
-            border: 4px solid rgba(14, 100, 55, 0.15);
+            width: 40px;
+            height: 40px;
+            border: 3.5px solid rgba(14, 100, 55, 0.15);
             border-top-color: #0e6437;
             border-radius: 50%;
             animation: spin 0.8s linear infinite;
         }
 
-        @keyframes zoomIn {
+        @keyframes slideInRight {
             from {
-                opacity: 0;
-                transform: scale(0.95);
+                transform: translateX(100%);
             }
             to {
-                opacity: 1;
-                transform: scale(1);
+                transform: translateX(0);
             }
-        }
-
-    </style>
+        }</style>
 </head>
 <body>
 
@@ -2321,26 +2354,32 @@
     </div>
 
     
-    <!-- In-App PDF Preview Modal Overlay -->
+    <!-- In-App Resizable Right-Side PDF Drawer Overlay -->
     <div id="pdf-modal-overlay" class="pdf-modal-overlay hidden" onclick="handlePdfOverlayClick(event)">
-        <div class="pdf-modal-container" onclick="event.stopPropagation()">
+        <div class="pdf-modal-container right-drawer" id="pdf-drawer-container" onclick="event.stopPropagation()">
+            <!-- Left border drag handle to resize width -->
+            <div class="pdf-resize-handle" id="pdf-resize-handle" title="টেনে ডানে-বামে ছোট বা বড় করুন">
+                <div class="resize-grip"></div>
+            </div>
+            
             <div class="pdf-modal-header">
                 <div class="pdf-modal-title">
-                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
                     <span id="pdf-modal-heading">কমিশন সভার মূল কার্যবিবরণী (PDF)</span>
                 </div>
                 <div class="pdf-modal-actions">
-                    <button class="pdf-action-btn" id="pdf-maximize-btn" onclick="togglePdfModalMaximize()" title="বড়/ছোট করুন">
-                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"></path></svg>
+                    <button class="pdf-action-btn" id="pdf-maximize-btn" onclick="togglePdfModalMaximize()" title="ফুল স্ক্রিন / স্বাভাবিক সাইজ">
+                        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"></path></svg>
                     </button>
                     <button class="pdf-action-btn" id="pdf-newtab-btn" onclick="openCurrentPdfNewTab()" title="আলাদা ট্যাবে খুলুন">
-                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+                        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
                     </button>
                     <button class="pdf-action-btn close-btn" onclick="closePdfModal()" title="বন্ধ করুন (Esc)">
-                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                        <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
                     </button>
                 </div>
             </div>
+            
             <div class="pdf-modal-body">
                 <div id="pdf-loading-spinner" class="pdf-loading-spinner">
                     <div class="spinner"></div>
@@ -6506,6 +6545,7 @@
 
         function init() {
             refreshPortalUI();
+            initPdfDrawerResize();
 
             // Set up search and filters
             document.getElementById('search-bar').addEventListener('input', filterMeetings);
@@ -7124,9 +7164,16 @@
             const iframe = document.getElementById('pdf-modal-iframe');
             const spinner = document.getElementById('pdf-loading-spinner');
             const heading = document.getElementById('pdf-modal-heading');
+            const drawer = document.getElementById('pdf-drawer-container');
             
             if (heading) {
                 heading.innerText = `${meetingNumber || ''} কমিশন সভার মূল কার্যবিবরণী (PDF)`;
+            }
+
+            // Reset width to default portrait drawer width
+            if (drawer) {
+                drawer.classList.remove('maximized');
+                drawer.style.width = '52vw';
             }
 
             if (spinner) spinner.style.display = 'flex';
@@ -7141,7 +7188,6 @@
 
             if (modal) {
                 modal.classList.remove('hidden');
-                document.body.style.overflow = 'hidden';
             }
         }
 
@@ -7150,7 +7196,6 @@
             const iframe = document.getElementById('pdf-modal-iframe');
             if (modal) {
                 modal.classList.add('hidden');
-                document.body.style.overflow = '';
             }
             if (iframe) {
                 iframe.src = '';
@@ -7164,9 +7209,15 @@
         }
 
         function togglePdfModalMaximize() {
-            const container = document.querySelector('.pdf-modal-container');
-            if (container) {
-                container.classList.toggle('maximized');
+            const drawer = document.getElementById('pdf-drawer-container');
+            if (drawer) {
+                if (drawer.classList.contains('maximized')) {
+                    drawer.classList.remove('maximized');
+                    drawer.style.width = '52vw';
+                } else {
+                    drawer.classList.add('maximized');
+                    drawer.style.width = '96vw';
+                }
             }
         }
 
@@ -7174,6 +7225,45 @@
             if (currentOpenPdfUrl) {
                 window.open(currentOpenPdfUrl, '_blank');
             }
+        }
+
+        // Drag to resize PDF Drawer logic
+        function initPdfDrawerResize() {
+            const handle = document.getElementById('pdf-resize-handle');
+            const drawer = document.getElementById('pdf-drawer-container');
+            if (!handle || !drawer) return;
+
+            let isDragging = false;
+
+            handle.addEventListener('mousedown', (e) => {
+                isDragging = true;
+                handle.classList.add('dragging');
+                document.body.style.userSelect = 'none';
+                document.body.style.cursor = 'ew-resize';
+                
+                const iframe = document.getElementById('pdf-modal-iframe');
+                if (iframe) iframe.style.pointerEvents = 'none';
+                e.preventDefault();
+            });
+
+            document.addEventListener('mousemove', (e) => {
+                if (!isDragging) return;
+                const newWidth = window.innerWidth - e.clientX;
+                if (newWidth >= 320 && newWidth <= window.innerWidth * 0.96) {
+                    drawer.style.width = newWidth + 'px';
+                }
+            });
+
+            document.addEventListener('mouseup', () => {
+                if (isDragging) {
+                    isDragging = false;
+                    handle.classList.remove('dragging');
+                    document.body.style.userSelect = '';
+                    document.body.style.cursor = '';
+                    const iframe = document.getElementById('pdf-modal-iframe');
+                    if (iframe) iframe.style.pointerEvents = 'auto';
+                }
+            });
         }
 
         function downloadAgendaPDF(meetingNumber, agendaNo) {
@@ -7187,7 +7277,7 @@
             openPdfModal(meeting.meeting_number);
         }
 
-        // Close modal on Escape key
+        // Close on Escape key
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') {
                 closePdfModal();
